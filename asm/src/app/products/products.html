@@ -1,0 +1,278 @@
+<main class="max-w-[1440px] mx-auto px-8 py-10 mt-24">
+  
+  <!-- Breadcrumb & Title -->
+  <div class="mb-12">
+    <nav class="flex items-center gap-2 text-on-surface-variant text-sm mb-4">
+      <a routerLink="/" class="hover:text-primary transition">Trang chủ</a>
+      <span class="material-symbols-outlined text-base">chevron_right</span>
+      <span class="text-[#001E40] font-medium">{{ getSelectedCategoryName() }}</span>
+    </nav>
+    <h1 class="text-5xl font-black font-headline tracking-tight text-primary-container">
+      {{ getSelectedCategoryName() }}
+    </h1>
+  </div>
+
+  <!-- Loading -->
+  @if (loading()) {
+    <div class="text-center py-20">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-primary"></div>
+      <p class="text-lg text-gray-500 mt-4">Đang tải sản phẩm...</p>
+    </div>
+  }
+
+  @if (!loading()) {
+    <div class="flex flex-col lg:flex-row gap-12">
+      
+      <!-- Sidebar Filter -->
+      <aside class="w-full lg:w-72 flex-shrink-0 space-y-10">
+        
+        <!-- Filter Group: Category -->
+        <section>
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="font-headline font-bold text-lg tracking-wide uppercase text-on-surface-variant/70 text-[11px]">Danh mục</h3>
+            @if (selectedCategories().length > 0) {
+              <span class="text-xs font-bold text-primary-container bg-primary-container/10 px-2 py-1 rounded-full">
+                {{ selectedCategories().length }}
+              </span>
+            }
+          </div>
+          <div class="space-y-4">
+            @for (category of categories(); track category.id) {
+              <label class="flex items-center gap-3 group cursor-pointer">
+                <input 
+                  [checked]="isCategorySelected(category.id)"
+                  (change)="toggleCategory(category.id)"
+                  class="w-5 h-5 rounded-lg border-outline-variant text-primary-container focus:ring-primary-container/20 transition-all" 
+                  type="checkbox"/>
+                <span class="text-on-surface font-medium group-hover:text-primary-container" 
+                      [class.text-primary-container]="isCategorySelected(category.id)"
+                      [class.font-bold]="isCategorySelected(category.id)">
+                  {{ category.ten_loai }}
+                </span>
+              </label>
+            }
+          </div>
+        </section>
+
+        <!-- Filter Group: Price Range -->
+        <section>
+          <h3 class="font-headline font-bold text-lg mb-6 tracking-wide uppercase text-on-surface-variant/70 text-[11px]">Khoảng giá</h3>
+          <div class="space-y-4">
+            <label class="flex items-center gap-3 group cursor-pointer">
+              <input 
+                [checked]="selectedPriceRange() === 'under20'"
+                (change)="setPriceRange('under20')"
+                class="w-5 h-5 border-outline-variant text-on-tertiary-container focus:ring-on-tertiary-container/20 transition-all" 
+                name="price" 
+                type="radio"/>
+              <span class="text-on-surface font-medium group-hover:text-on-tertiary-container">Dưới 20 triệu</span>
+            </label>
+            <label class="flex items-center gap-3 group cursor-pointer">
+              <input 
+                [checked]="selectedPriceRange() === '20to40'"
+                (change)="setPriceRange('20to40')"
+                class="w-5 h-5 border-outline-variant text-on-tertiary-container focus:ring-on-tertiary-container/20 transition-all" 
+                name="price" 
+                type="radio"/>
+              <span class="text-on-surface font-medium group-hover:text-on-tertiary-container">20 - 40 triệu</span>
+            </label>
+            <label class="flex items-center gap-3 group cursor-pointer">
+              <input 
+                [checked]="selectedPriceRange() === 'over40'"
+                (change)="setPriceRange('over40')"
+                class="w-5 h-5 border-outline-variant text-on-tertiary-container focus:ring-on-tertiary-container/20 transition-all" 
+                name="price" 
+                type="radio"/>
+              <span class="text-on-surface font-medium group-hover:text-on-tertiary-container">Trên 40 triệu</span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Clear Filters Button -->
+        @if (selectedCategories().length > 0 || selectedPriceRange()) {
+          <button 
+            (click)="clearFilters()"
+            class="w-full px-4 py-3 bg-surface-container-low text-on-surface font-bold rounded-xl hover:bg-primary-container hover:text-white transition-all">
+            Xóa bộ lọc
+          </button>
+        }
+      </aside>
+
+      <!-- Product Grid Area -->
+      <div class="flex-1">
+        
+        <!-- Sorting Bar -->
+        <div class="flex flex-wrap items-center justify-between gap-6 mb-10 pb-6 border-b border-surface-container-high">
+          <p class="text-on-surface-variant">
+            Hiển thị <span class="text-primary-container font-bold">{{ products().length }}</span> 
+            trong số <span class="text-primary-container font-bold">{{ totalProducts() }}</span> sản phẩm
+          </p>
+          <div class="flex items-center gap-4">
+            <span class="text-sm font-bold text-on-surface-variant uppercase tracking-widest text-[10px]">Sắp xếp theo:</span>
+            <div class="flex bg-surface-container-low p-1 rounded-xl">
+              <button 
+                (click)="setSortBy('newest')"
+                [class.bg-white]="sortBy() === 'newest'"
+                [class.text-primary-container]="sortBy() === 'newest'"
+                [class.shadow-sm]="sortBy() === 'newest'"
+                [class.text-on-surface-variant]="sortBy() !== 'newest'"
+                class="px-4 py-2 text-sm font-bold rounded-lg hover:text-primary-container transition-all">
+                Mới nhất
+              </button>
+              <button 
+                (click)="setSortBy('popular')"
+                [class.bg-white]="sortBy() === 'popular'"
+                [class.text-primary-container]="sortBy() === 'popular'"
+                [class.shadow-sm]="sortBy() === 'popular'"
+                [class.text-on-surface-variant]="sortBy() !== 'popular'"
+                class="px-4 py-2 text-sm font-bold rounded-lg hover:text-primary-container transition-all">
+                Bán chạy
+              </button>
+              <button 
+                (click)="setSortBy('priceDesc')"
+                [class.bg-white]="sortBy() === 'priceDesc'"
+                [class.text-primary-container]="sortBy() === 'priceDesc'"
+                [class.shadow-sm]="sortBy() === 'priceDesc'"
+                [class.text-on-surface-variant]="sortBy() !== 'priceDesc'"
+                class="px-4 py-2 text-sm font-bold rounded-lg hover:text-primary-container transition-all">
+                Giá cao
+              </button>
+              <button 
+                (click)="setSortBy('priceAsc')"
+                [class.bg-white]="sortBy() === 'priceAsc'"
+                [class.text-primary-container]="sortBy() === 'priceAsc'"
+                [class.shadow-sm]="sortBy() === 'priceAsc'"
+                [class.text-on-surface-variant]="sortBy() !== 'priceAsc'"
+                class="px-4 py-2 text-sm font-bold rounded-lg hover:text-primary-container transition-all">
+                Giá thấp
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Grid -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
+          
+          @for (product of products(); track product.id) {
+            <!-- Product Card -->
+            <div class="group relative flex flex-col bg-surface-container-lowest rounded-xl overflow-hidden shadow-[0_4px_24px_rgba(0,0,0,0.02)] hover:shadow-[0_24px_48px_rgba(0,0,0,0.06)] transition-all duration-500">
+              
+              <a [routerLink]="['/sp', product.id]" class="aspect-[4/3] bg-surface-container-low relative overflow-hidden block">
+                <img 
+                  class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
+                  [src]="getImageUrl(product.hinh)" 
+                  [alt]="product.ten_sp" />
+                
+                <div class="absolute top-4 left-4 flex flex-col gap-2">
+                  @if (product.hot === 1) {
+                    <span class="bg-primary-container text-white text-[10px] font-bold px-2 py-1 rounded tracking-wider uppercase">HOT</span>
+                  }
+                  @if (hasDiscount(product)) {
+                    <span class="bg-[#e05d00] text-white text-[10px] font-bold px-2 py-1 rounded tracking-wider uppercase">
+                      -{{ getDiscountPercent(product) }}% OFF
+                    </span>
+                  }
+                </div>
+              </a>
+
+              <div class="p-6 flex flex-col flex-1">
+                <div class="flex-1 flex flex-col">
+                  <a [routerLink]="['/sp', product.id]">
+                    <h3 class="text-lg font-headline font-bold text-primary-container leading-tight mb-4 group-hover:text-[#e05d00] transition-colors h-14 line-clamp-2">
+                      {{ product.ten_sp }}
+                    </h3>
+                  </a>
+                  
+                  <div class="h-16 mb-4">
+                    @if (product.thuoc_tinh && product.thuoc_tinh.length > 0) {
+                      <div class="grid grid-cols-2 gap-2">
+                        @if (product.thuoc_tinh[0].ram) {
+                          <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg">
+                            <span class="material-symbols-outlined text-[16px] text-on-surface-variant">memory</span>
+                            <span class="text-[11px] font-bold text-on-surface-variant truncate">{{ product.thuoc_tinh[0].ram }}</span>
+                          </div>
+                        }
+                        @if (product.thuoc_tinh[0].dia_cung) {
+                          <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg">
+                            <span class="material-symbols-outlined text-[16px] text-on-surface-variant">database</span>
+                            <span class="text-[11px] font-bold text-on-surface-variant truncate">{{ product.thuoc_tinh[0].dia_cung }}</span>
+                          </div>
+                        }
+                        @if (product.thuoc_tinh[0].man_hinh) {
+                          <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg">
+                            <span class="material-symbols-outlined text-[16px] text-on-surface-variant">monitor</span>
+                            <span class="text-[11px] font-bold text-on-surface-variant truncate">{{ product.thuoc_tinh[0].man_hinh }}</span>
+                          </div>
+                        }
+                        @if (product.thuoc_tinh[0].gpu) {
+                          <div class="flex items-center gap-2 bg-surface-container-low px-3 py-1.5 rounded-lg">
+                            <span class="material-symbols-outlined text-[16px] text-on-surface-variant">video_settings</span>
+                            <span class="text-[11px] font-bold text-on-surface-variant truncate">{{ product.thuoc_tinh[0].gpu }}</span>
+                          </div>
+                        }
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <div class="pt-4 border-t border-surface-container-high flex items-center justify-between">
+                  <div class="flex flex-col">
+                    @if (hasDiscount(product)) {
+                      <span class="text-xs text-on-surface-variant line-through">{{ product.gia | number:'1.0-0' }}đ</span>
+                      <span class="text-xl font-black text-on-tertiary-container">{{ product.gia_km | number:'1.0-0' }}đ</span>
+                    } @else {
+                      <span class="text-xl font-black text-on-tertiary-container">{{ product.gia | number:'1.0-0' }}đ</span>
+                    }
+                  </div>
+                  <button 
+                    (click)="addToCart(product)"
+                    class="w-10 h-10 bg-primary-container text-white rounded-full flex items-center justify-center hover:bg-[#e05d00] transition-colors shadow-lg shadow-primary-container/10">
+                    <span class="material-symbols-outlined">add_shopping_cart</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+
+        </div>
+
+        <!-- Pagination -->
+        @if (totalPages() > 1) {
+          <div class="mt-20 flex items-center justify-center gap-3">
+            <button 
+              (click)="goToPage(currentPage() - 1)"
+              [disabled]="currentPage() === 1"
+              class="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant hover:bg-primary-container hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+
+            @for (page of getPageNumbers(); track $index) {
+              @if (page === -1) {
+                <span class="text-on-surface-variant px-2 font-bold">...</span>
+              } @else {
+                <button 
+                  (click)="goToPage(page)"
+                  [class.bg-primary-container]="page === currentPage()"
+                  [class.text-white]="page === currentPage()"
+                  [class.bg-surface-container-low]="page !== currentPage()"
+                  [class.text-on-surface-variant]="page !== currentPage()"
+                  class="w-12 h-12 flex items-center justify-center rounded-xl hover:bg-primary-container hover:text-white transition-all font-bold">
+                  {{ page }}
+                </button>
+              }
+            }
+
+            <button 
+              (click)="goToPage(currentPage() + 1)"
+              [disabled]="currentPage() === totalPages()"
+              class="w-12 h-12 flex items-center justify-center rounded-xl bg-surface-container-low text-on-surface-variant hover:bg-primary-container hover:text-white transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        }
+
+      </div>
+    </div>
+  }
+  
+</main>

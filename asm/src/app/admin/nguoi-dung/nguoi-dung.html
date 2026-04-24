@@ -1,0 +1,348 @@
+<div class="pb-12 px-6 pt-6 bg-[#f8fafc] min-h-screen">
+  
+  <!-- Header -->
+  <div class="mb-6 flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 tracking-tight leading-none">Quản lý người dùng</h1>
+      <p class="text-sm text-gray-500 mt-2 font-medium">Quản lý tài khoản người dùng và phân quyền</p>
+    </div>
+    <button (click)="openAddModal()" class="px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors flex items-center gap-2 font-bold text-sm">
+      <span class="material-symbols-outlined text-[20px]">add</span>
+      Thêm người dùng
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      
+      <!-- Search -->
+      <div>
+        <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Tìm kiếm</label>
+        <div class="relative">
+          <input 
+            type="text" 
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="onSearch()"
+            placeholder="Tìm theo tên hoặc email..."
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+          >
+          <button (click)="onSearch()" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-600">
+            <span class="material-symbols-outlined text-[20px]">search</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Role Filter -->
+      <div>
+        <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Vai trò</label>
+        <div class="flex gap-2">
+          <button 
+            (click)="onRoleFilter(undefined)"
+            [class]="selectedRole() === undefined ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+            class="px-4 py-2.5 rounded-xl font-bold text-sm transition-colors flex-1"
+          >
+            Tất cả
+          </button>
+          <button 
+            (click)="onRoleFilter(0)"
+            [class]="selectedRole() === 0 ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+            class="px-4 py-2.5 rounded-xl font-bold text-sm transition-colors flex-1"
+          >
+            Khách hàng
+          </button>
+          <button 
+            (click)="onRoleFilter(1)"
+            [class]="selectedRole() === 1 ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'"
+            class="px-4 py-2.5 rounded-xl font-bold text-sm transition-colors flex-1"
+          >
+            Admin
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+    
+    @if (loading()) {
+      <div class="flex items-center justify-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+      </div>
+    } @else {
+      
+      <div class="overflow-x-auto">
+        <table class="w-full text-left">
+          <thead class="bg-gray-50/50">
+            <tr>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-500">ID</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-500">Họ tên</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-500">Email</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-500 text-center">Vai trò</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-500 text-center">Trạng thái</th>
+              <th class="px-6 py-4 text-[11px] font-black uppercase tracking-widest text-gray-500 text-center">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @for (user of users(); track user.id) {
+              <tr class="hover:bg-gray-50 transition-colors">
+                <td class="px-6 py-4 text-sm font-bold text-gray-600">#{{ user.id }}</td>
+                <td class="px-6 py-4">
+                  <span class="text-sm font-bold text-gray-900">{{ user.ho_ten }}</span>
+                </td>
+                <td class="px-6 py-4">
+                  <span class="text-sm text-gray-600">{{ user.email }}</span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <span [class]="'inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase ' + getRoleBadgeClass(user.vai_tro)">
+                    {{ getRoleLabel(user.vai_tro) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 text-center">
+                  <span [class]="'inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase ' + getLockStatusBadgeClass(user.khoa)">
+                    {{ getLockStatusLabel(user.khoa) }}
+                  </span>
+                </td>
+                <td class="px-6 py-4">
+                  <div class="flex items-center justify-center gap-2">
+                    <button 
+                      (click)="openEditModal(user)"
+                      class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                      title="Sửa"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">edit</span>
+                    </button>
+                    <button 
+                      (click)="openPasswordModal(user)"
+                      class="p-2 text-orange-600 hover:bg-orange-50 rounded-lg transition-colors"
+                      title="Đổi mật khẩu"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">key</span>
+                    </button>
+                    <button 
+                      (click)="toggleLockUser(user)"
+                      [class]="user.khoa === 1 ? 'p-2 text-green-600 hover:bg-green-50 rounded-lg transition-colors' : 'p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors'"
+                      [title]="user.khoa === 1 ? 'Mở khóa' : 'Khóa'"
+                    >
+                      <span class="material-symbols-outlined text-[20px]">{{ user.khoa === 1 ? 'lock_open' : 'lock' }}</span>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            }
+            @if (users().length === 0) {
+              <tr>
+                <td colspan="5" class="px-6 py-12 text-center text-gray-500">
+                  <span class="material-symbols-outlined text-[48px] text-gray-300 mb-2">person_off</span>
+                  <p class="text-sm font-medium">Không tìm thấy người dùng nào</p>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
+          <div class="text-sm text-gray-600">
+            Hiển thị <span class="font-bold">{{ (currentPage() - 1) * limit + 1 }}</span> - 
+            <span class="font-bold">{{ Math.min(currentPage() * limit, totalUsers()) }}</span> 
+            trong tổng số <span class="font-bold">{{ totalUsers() }}</span> người dùng
+          </div>
+          
+          <div class="flex gap-2">
+            <button 
+              (click)="changePage(currentPage() - 1)"
+              [disabled]="currentPage() === 1"
+              [class]="currentPage() === 1 ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'"
+              class="px-3 py-2 border border-gray-200 rounded-lg text-sm font-bold text-gray-700 transition-colors"
+            >
+              Trước
+            </button>
+            
+            @for (page of getPageNumbers(); track page) {
+              @if (page === -1) {
+                <span class="px-3 py-2 text-gray-400">...</span>
+              } @else {
+                <button 
+                  (click)="changePage(page)"
+                  [class]="page === currentPage() ? 'bg-blue-600 text-white' : 'border border-gray-200 text-gray-700 hover:bg-gray-100'"
+                  class="px-3 py-2 rounded-lg text-sm font-bold transition-colors min-w-[40px]"
+                >
+                  {{ page }}
+                </button>
+              }
+            }
+            
+            <button 
+              (click)="changePage(currentPage() + 1)"
+              [disabled]="currentPage() === totalPages()"
+              [class]="currentPage() === totalPages() ? 'opacity-50 cursor-not-allowed' : 'hover:bg-gray-100'"
+              class="px-3 py-2 border border-gray-200 rounded-lg text-sm font-bold text-gray-700 transition-colors"
+            >
+              Sau
+            </button>
+          </div>
+        </div>
+      }
+
+    }
+
+  </div>
+
+</div>
+
+<!-- Modal Thêm/Sửa -->
+@if (showModal()) {
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
+      
+      <!-- Header -->
+      <div class="p-6 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white">
+        <h2 class="text-xl font-black text-gray-900">
+          {{ isEditMode() ? 'Sửa người dùng' : 'Thêm người dùng' }}
+        </h2>
+        <button (click)="closeModal()" class="text-gray-400 hover:text-gray-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <div class="p-6 space-y-4">
+        
+        <div>
+          <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Họ tên</label>
+          <input 
+            type="text" 
+            [(ngModel)]="formData().ho_ten"
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            placeholder="Nhập họ tên"
+          >
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Email</label>
+          <input 
+            type="email" 
+            [(ngModel)]="formData().email"
+            [disabled]="isEditMode()"
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm disabled:bg-gray-50 disabled:cursor-not-allowed"
+            placeholder="Nhập email"
+          >
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Vai trò</label>
+          <select 
+            [(ngModel)]="formData().vai_tro"
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+          >
+            <option [value]="0">Khách hàng</option>
+            <option [value]="1">Admin</option>
+          </select>
+        </div>
+
+        @if (!isEditMode()) {
+          <div>
+            <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Mật khẩu</label>
+            <input 
+              type="password" 
+              [(ngModel)]="formData().mat_khau"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              placeholder="Nhập mật khẩu"
+            >
+          </div>
+
+          <div>
+            <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Nhập lại mật khẩu</label>
+            <input 
+              type="password" 
+              [(ngModel)]="formData().go_lai_mat_khau"
+              class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+              placeholder="Nhập lại mật khẩu"
+            >
+          </div>
+        }
+
+      </div>
+
+      <!-- Footer -->
+      <div class="p-6 border-t border-gray-100 flex gap-3">
+        <button 
+          (click)="closeModal()"
+          class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-bold text-sm"
+        >
+          Hủy
+        </button>
+        <button 
+          (click)="saveUser()"
+          class="flex-1 px-4 py-2.5 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors font-bold text-sm"
+        >
+          {{ isEditMode() ? 'Cập nhật' : 'Thêm mới' }}
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+
+<!-- Modal Đổi mật khẩu -->
+@if (showPasswordModal()) {
+  <div class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+    <div class="bg-white rounded-2xl shadow-xl max-w-md w-full">
+      
+      <!-- Header -->
+      <div class="p-6 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="text-xl font-black text-gray-900">Đổi mật khẩu</h2>
+        <button (click)="closePasswordModal()" class="text-gray-400 hover:text-gray-600">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+
+      <!-- Form -->
+      <div class="p-6 space-y-4">
+        
+        <div>
+          <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Mật khẩu mới</label>
+          <input 
+            type="password" 
+            [(ngModel)]="newPassword"
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            placeholder="Nhập mật khẩu mới"
+          >
+        </div>
+
+        <div>
+          <label class="block text-xs font-black text-gray-700 mb-2 uppercase tracking-wider">Nhập lại mật khẩu</label>
+          <input 
+            type="password" 
+            [(ngModel)]="confirmPassword"
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-sm"
+            placeholder="Nhập lại mật khẩu mới"
+          >
+        </div>
+
+      </div>
+
+      <!-- Footer -->
+      <div class="p-6 border-t border-gray-100 flex gap-3">
+        <button 
+          (click)="closePasswordModal()"
+          class="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-xl hover:bg-gray-50 transition-colors font-bold text-sm"
+        >
+          Hủy
+        </button>
+        <button 
+          (click)="changePassword()"
+          class="flex-1 px-4 py-2.5 bg-orange-600 text-white rounded-xl hover:bg-orange-700 transition-colors font-bold text-sm"
+        >
+          Đổi mật khẩu
+        </button>
+      </div>
+
+    </div>
+  </div>
+}

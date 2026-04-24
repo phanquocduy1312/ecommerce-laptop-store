@@ -1,0 +1,125 @@
+<main class="w-full max-w-[480px] animate-in fade-in zoom-in duration-700 mx-auto my-32">
+    <!-- Logo & Header -->
+    <div class="text-center mb-10">
+        <div class="inline-flex items-center gap-2 mb-6">
+            <span class="w-10 h-10 bg-primary rounded-xl flex items-center justify-center text-on-primary">
+                <span class="material-symbols-outlined"
+                    data-icon="precision_manufacturing">precision_manufacturing</span>
+            </span>
+            <span class="brand-logo text-2xl font-bold tracking-tighter text-primary">TechCore</span>
+        </div>
+        <h1 class="text-3xl font-bold text-primary tracking-tight mb-2">Tạo tài khoản mới</h1>
+        <p class="text-on-surface-variant font-body text-sm">Trải nghiệm kỷ nguyên số được quản tuyển chọn kỹ lưỡng.</p>
+    </div>
+    <!-- Registration Form Card -->
+    <div class="surface-container-lowest glass-panel rounded-xl p-8 shadow-sm shadow-primary/5 border border-white/20">
+        <form class="space-y-5" (ngSubmit)="onSubmit()">
+            <!-- Row: Full Name -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant ml-1"
+                    for="fullname">Họ và tên</label>
+                <div class="relative">
+                    <span
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-[20px]"
+                        data-icon="person">person</span>
+                    <input
+                        class="w-full pl-11 pr-4 py-3 bg-surface-container-low border-none rounded-lg focus:ring-1 focus:ring-primary/20 focus:bg-white transition-all text-sm outline-none placeholder:text-outline-variant"
+                        id="fullname" name="fullname" placeholder="Nguyễn Văn A" type="text" 
+                        [(ngModel)]="formData.ho_ten" required />
+                </div>
+            </div>
+            <!-- Row: Email -->
+            <div class="space-y-1.5">
+                <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant ml-1"
+                    for="email">Email</label>
+                <div class="relative">
+                    <span
+                        class="absolute left-4 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-[20px]"
+                        data-icon="mail">mail</span>
+                    <input
+                        class="w-full pl-11 pr-4 py-3 bg-surface-container-low border-none rounded-lg focus:ring-1 focus:ring-primary/20 focus:bg-white transition-all text-sm outline-none placeholder:text-outline-variant"
+                        id="email" name="email" placeholder="example@tech.com" type="email" 
+                        [(ngModel)]="formData.email" required />
+                </div>
+            </div>
+            <!-- Row: Phone -->
+       
+            <!-- Row: Password -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant ml-1"
+                        for="password">Mật khẩu</label>
+                    <div class="relative">
+                        <span
+                            class="absolute left-4 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-[20px]"
+                            data-icon="lock">lock</span>
+                        <input
+                            class="w-full pl-11 pr-4 py-3 bg-surface-container-low border-none rounded-lg focus:ring-1 focus:ring-primary/20 focus:bg-white transition-all text-sm outline-none placeholder:text-outline-variant"
+                            id="password" name="password" placeholder="••••••••" type="password" 
+                            [(ngModel)]="formData.mat_khau" required />
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="block text-xs font-semibold uppercase tracking-wider text-on-surface-variant ml-1"
+                        for="confirm-password">Xác nhận mật khẩu</label>
+                    <div class="relative">
+                        <span
+                            class="absolute left-4 top-1/2 -translate-y-1/2 text-outline material-symbols-outlined text-[20px]"
+                            data-icon="lock_reset">lock_reset</span>
+                        <input
+                            class="w-full pl-11 pr-4 py-3 bg-surface-container-low border-none rounded-lg focus:ring-1 focus:ring-primary/20 focus:bg-white transition-all text-sm outline-none placeholder:text-outline-variant"
+                            id="confirm-password" name="confirm-password" placeholder="••••••••" type="password" 
+                            [(ngModel)]="formData.go_lai_mat_khau" required />
+                    </div>
+                </div>
+            </div>
+            <!-- Terms Checkbox -->
+            <div class="flex items-start gap-3 py-2">
+                <input
+                    class="mt-1 w-4 h-4 rounded border-outline-variant text-on-tertiary-container focus:ring-on-tertiary-container/30 transition-all cursor-pointer"
+                    id="terms" type="checkbox" />
+                <label class="text-xs text-on-surface-variant leading-relaxed cursor-pointer select-none" for="terms">
+                    Tôi đồng ý với các <a class="text-primary-container font-semibold hover:underline" href="#">điều
+                        khoản sử dụng</a> và <a class="text-primary-container font-semibold hover:underline"
+                        href="#">chính sách bảo mật</a> của TechCore.
+                </label>
+            </div>
+            <!-- Submit Button -->
+            <button
+                class="w-full bg-on-tertiary-container text-white font-headline font-bold py-4 rounded-full shadow-lg shadow-on-tertiary-container/20 hover:opacity-90 active:scale-[0.98] transition-all tracking-wide uppercase text-sm"
+                type="submit">
+                ĐĂNG KÝ TÀI KHOẢN
+            </button>
+        </form>
+        <!-- Social Auth Divider -->
+        <div class="relative my-8 flex items-center">
+            <div class="flex-grow border-t border-outline-variant/30"></div>
+            <span class="px-4 text-[10px] uppercase tracking-[0.2em] font-bold text-outline">Hoặc đăng ký bằng</span>
+            <div class="flex-grow border-t border-outline-variant/30"></div>
+        </div>
+        <!-- Social Links -->
+        <div class="grid grid-cols-2 gap-4">
+            <button
+                class="flex items-center justify-center gap-3 py-3 border border-outline-variant/40 rounded-full hover:bg-surface-container transition-colors active:scale-[0.98]">
+                <img alt="Google Logo" class="w-4 h-4"
+                    data-alt="minimalist clean icon of google logo with high quality resolution"
+                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHxJ3kKsJo9b8CsFwwWAR7dfJVE_d-fz2KmP-yDFvbv-_H32liRgjGyiUXIymh7KMoCViIV4xHbjwf0xe8_SmlqXZThVEUQsxr0AxAOtXGfil545OduLa8YP7yMHqgUA7vtot3v27FM9SlKFewiO7cRzAkqMawLeFqS7FMh-fnGKOI0K-mRtZsdkt6FvB-AWceLgIPyc_vbhlXti1d8hYkOQx4hCrmLZjEwjKViwOykZi_LSlFQC8V-zBTwx1-pHyZetCYzvbk4KPC" />
+                <span class="text-xs font-semibold text-primary">Google</span>
+            </button>
+            <button
+                class="flex items-center justify-center gap-3 py-3 border border-outline-variant/40 rounded-full hover:bg-surface-container transition-colors active:scale-[0.98]">
+                <span class="material-symbols-outlined text-[18px] text-blue-600" data-icon="facebook"
+                    style="font-variation-settings: 'FILL' 1;">social_leaderboard</span>
+                <span class="text-xs font-semibold text-primary">Facebook</span>
+            </button>
+        </div>
+    </div>
+    <!-- Footer Link -->
+    <div class="mt-8 text-center">
+        <p class="text-on-surface-variant text-sm font-body">
+            Đã có tài khoản?
+            <a class="text-primary font-bold hover:text-on-tertiary-container transition-colors ml-1"
+                routerLink="/dang-nhap">Đăng nhập tại đây</a>
+        </p>
+    </div>
+</main>

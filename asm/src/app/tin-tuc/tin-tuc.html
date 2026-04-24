@@ -1,0 +1,185 @@
+<!-- Danh sách tin tức -->
+@if (!isDetailView()) {
+  <div class="max-w-7xl mx-auto px-8 py-12">
+    <div class="mb-8">
+      <h1 class="text-4xl font-bold text-primary mb-2">Tin tức công nghệ</h1>
+      <p class="text-gray-600">Cập nhật những tin tức mới nhất về laptop và công nghệ</p>
+    </div>
+
+    @if (loading()) {
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    } @else {
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        @for (item of newsList(); track item.id) {
+          <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 group">
+            <a [routerLink]="['/tin-tuc', item.id]" class="h-56 overflow-hidden block">
+              <img 
+                [alt]="item.tieu_de" 
+                class="w-full h-full object-cover group-hover:scale-105 transition-all duration-700" 
+                [src]="getImageUrl(item.hinh)"
+              />
+            </a>
+            <div class="p-6">
+              @if (item.loai_tin) {
+                <span class="text-[10px] uppercase font-bold text-primary mb-3 block">
+                  {{ item.loai_tin.ten_loai }}
+                </span>
+              }
+              <a [routerLink]="['/tin-tuc', item.id]">
+                <h3 class="text-xl font-bold text-gray-900 mb-3 leading-tight group-hover:text-primary transition-colors line-clamp-2">
+                  {{ item.tieu_de }}
+                </h3>
+              </a>
+              <p class="text-sm text-gray-600 line-clamp-2 mb-4">{{ item.mo_ta }}</p>
+              <div class="flex items-center gap-3 text-xs text-gray-500">
+                <span class="flex items-center gap-1">
+                  <span class="material-symbols-outlined text-sm">calendar_today</span>
+                  {{ formatDate(item.ngay) }}
+                </span>
+                @if (item.luot_xem > 0) {
+                  <span class="flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">visibility</span>
+                    {{ item.luot_xem }}
+                  </span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="flex justify-center items-center gap-2 mt-12">
+          <button 
+            (click)="changePage(currentPage() - 1)"
+            [disabled]="currentPage() === 1"
+            class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span class="material-symbols-outlined">chevron_left</span>
+          </button>
+          
+          @for (page of [].constructor(totalPages()); track $index) {
+            <button 
+              (click)="changePage($index + 1)"
+              [class.bg-primary]="currentPage() === $index + 1"
+              [class.text-white]="currentPage() === $index + 1"
+              class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50"
+            >
+              {{ $index + 1 }}
+            </button>
+          }
+          
+          <button 
+            (click)="changePage(currentPage() + 1)"
+            [disabled]="currentPage() === totalPages()"
+            class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <span class="material-symbols-outlined">chevron_right</span>
+          </button>
+        </div>
+      }
+    }
+  </div>
+}
+
+<!-- Chi tiết tin tức -->
+@if (isDetailView() && newsDetail()) {
+  <div class="max-w-4xl mx-auto px-8 py-12 mt-24  ">
+    @if (loading()) {
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-primary"></div>
+      </div>
+    } @else {
+      <article class="bg-white rounded-2xl overflow-hidden shadow-lg">
+        <!-- Header -->
+        <div class="p-8 border-b">
+          @if (newsDetail()?.loai_tin) {
+            <span class="text-sm uppercase font-bold text-primary mb-3 block">
+              {{ newsDetail()?.loai_tin?.ten_loai }}
+            </span>
+          }
+          <h1 class="text-4xl font-bold text-gray-900 mb-4">{{ newsDetail()?.tieu_de }}</h1>
+          <div class="flex items-center gap-4 text-sm text-gray-600">
+            <span class="flex items-center gap-1">
+              <span class="material-symbols-outlined text-sm">calendar_today</span>
+              {{ formatDate(newsDetail()?.ngay || '') }}
+            </span>
+            @if (newsDetail()?.luot_xem && newsDetail()!.luot_xem > 0) {
+              <span class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-sm">visibility</span>
+                {{ newsDetail()?.luot_xem }} lượt xem
+              </span>
+            }
+          </div>
+        </div>
+
+        <!-- Featured Image -->
+        @if (newsDetail()?.hinh) {
+          <div class="w-full h-96 overflow-hidden">
+            <img 
+              [alt]="newsDetail()?.tieu_de" 
+              class="w-full h-full object-cover" 
+              [src]="getImageUrl(newsDetail()!.hinh)"
+            />
+          </div>
+        }
+
+        <!-- Content -->
+        <div class="p-8">
+          @if (newsDetail()?.mo_ta) {
+            <p class="text-lg text-gray-700 mb-6 font-semibold">{{ newsDetail()?.mo_ta }}</p>
+          }
+          <div class="prose max-w-none" [innerHTML]="newsDetail()?.noi_dung"></div>
+        </div>
+
+        <!-- Tags -->
+        @if (newsDetail()?.tags) {
+          <div class="px-8 pb-8">
+            <div class="flex flex-wrap gap-2">
+              @for (tag of newsDetail()?.tags?.split(','); track tag) {
+                <span class="px-3 py-1 bg-gray-100 text-gray-700 text-sm rounded-full">{{ tag.trim() }}</span>
+              }
+            </div>
+          </div>
+        }
+      </article>
+
+      <!-- Related News -->
+      @if (relatedNews().length > 0) {
+        <div class="mt-12">
+          <h2 class="text-2xl font-bold text-gray-900 mb-6">Tin tức liên quan</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            @for (item of relatedNews(); track item.id) {
+              <a [routerLink]="['/tin-tuc', item.id]" class="flex gap-4 bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all group">
+                <div class="w-32 h-32 flex-shrink-0 overflow-hidden">
+                  <img 
+                    [alt]="item.tieu_de" 
+                    class="w-full h-full object-cover group-hover:scale-105 transition-transform" 
+                    [src]="getImageUrl(item.hinh)"
+                  />
+                </div>
+                <div class="flex-1 p-4">
+                  <h3 class="font-bold text-gray-900 mb-2 line-clamp-2 group-hover:text-primary transition-colors">
+                    {{ item.tieu_de }}
+                  </h3>
+                  <span class="text-xs text-gray-500">{{ formatDate(item.ngay) }}</span>
+                </div>
+              </a>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Back Button -->
+      <div class="mt-8">
+        <a routerLink="/tin-tuc" class="inline-flex items-center gap-2 text-primary hover:underline">
+          <span class="material-symbols-outlined">arrow_back</span>
+          Quay lại danh sách tin tức
+        </a>
+      </div>
+    }
+  </div>
+}

@@ -1,0 +1,192 @@
+<div class="pb-12 px-6 pt-6 bg-[#f8fafc] min-h-screen">
+  
+  <!-- Header -->
+  <div class="mb-8">
+    <h1 class="text-2xl font-bold text-gray-900 tracking-tight leading-none">Dashboard</h1>
+    <p class="text-sm text-gray-500 mt-2 font-medium">Tổng quan hệ thống quản lý TechCore</p>
+  </div>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center py-20">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+    </div>
+  } @else {
+    
+    <!-- Stats Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      
+      <!-- Tổng đơn hàng -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-blue-600 text-[24px]">shopping_cart</span>
+          </div>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Đơn hàng</span>
+        </div>
+        <h3 class="text-3xl font-black text-gray-900 mb-1">{{ stats().totalOrders }}</h3>
+        <p class="text-sm text-gray-500">Tổng số đơn hàng</p>
+      </div>
+
+      <!-- Đơn chờ xử lý -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-yellow-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-yellow-600 text-[24px]">pending</span>
+          </div>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Chờ xử lý</span>
+        </div>
+        <h3 class="text-3xl font-black text-gray-900 mb-1">{{ stats().pendingOrders }}</h3>
+        <p class="text-sm text-gray-500">Đơn cần xử lý</p>
+      </div>
+
+      <!-- Doanh thu -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-green-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-green-600 text-[24px]">payments</span>
+          </div>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Doanh thu</span>
+        </div>
+        <h3 class="text-2xl font-black text-gray-900 mb-1">{{ formatPrice(stats().totalRevenue) }}</h3>
+        <p class="text-sm text-gray-500">Tổng doanh thu</p>
+      </div>
+
+      <!-- Sản phẩm -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-purple-600 text-[24px]">inventory_2</span>
+          </div>
+          <span class="text-xs font-bold text-gray-400 uppercase tracking-wider">Sản phẩm</span>
+        </div>
+        <h3 class="text-3xl font-black text-gray-900 mb-1">{{ stats().totalProducts }}</h3>
+        <p class="text-sm text-gray-500">Tổng sản phẩm</p>
+      </div>
+
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Đơn hàng gần đây -->
+      <div class="lg:col-span-2 bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+          <h2 class="text-lg font-black text-gray-900">Đơn hàng gần đây</h2>
+          <p class="text-sm text-gray-500 mt-1">10 đơn hàng mới nhất</p>
+        </div>
+        
+        <div class="overflow-x-auto">
+          <table class="w-full text-left">
+            <thead class="bg-gray-50/50">
+              <tr>
+                <th class="px-6 py-3 text-[11px] font-black uppercase tracking-widest text-gray-500">Mã ĐH</th>
+                <th class="px-6 py-3 text-[11px] font-black uppercase tracking-widest text-gray-500">Khách hàng</th>
+                <th class="px-6 py-3 text-[11px] font-black uppercase tracking-widest text-gray-500 text-right">Tổng tiền</th>
+                <th class="px-6 py-3 text-[11px] font-black uppercase tracking-widest text-gray-500 text-center">Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-gray-100">
+              @for (order of stats().recentOrders; track order.id) {
+                <tr class="hover:bg-gray-50 transition-colors">
+                  <td class="px-6 py-4 text-sm font-bold text-gray-600">#{{ order.id }}</td>
+                  <td class="px-6 py-4">
+                    <div class="flex flex-col">
+                      <span class="text-sm font-bold text-gray-900">{{ order.ho_ten }}</span>
+                      <span class="text-xs text-gray-500">{{ order.email }}</span>
+                    </div>
+                  </td>
+                  <td class="px-6 py-4 text-right text-sm font-black text-gray-900">{{ formatPrice(order.tong_tien) }}</td>
+                  <td class="px-6 py-4 text-center">
+                    <span [class]="'inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-black uppercase ' + getStatusColor(order.trang_thai)">
+                      {{ getStatusLabel(order.trang_thai) }}
+                    </span>
+                  </td>
+                </tr>
+              }
+              @if (stats().recentOrders.length === 0) {
+                <tr>
+                  <td colspan="4" class="px-6 py-8 text-center text-gray-500 text-sm">
+                    Chưa có đơn hàng nào
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Sản phẩm bán chạy -->
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+        <div class="p-6 border-b border-gray-100">
+          <h2 class="text-lg font-black text-gray-900">Sản phẩm bán chạy</h2>
+          <p class="text-sm text-gray-500 mt-1">Top 5 sản phẩm</p>
+        </div>
+        
+        <div class="p-6 space-y-4">
+          @for (product of stats().topProducts; track product.id) {
+            <div class="flex items-center gap-4">
+              <div class="w-12 h-12 rounded-lg border border-gray-200 bg-gray-50 p-1 flex items-center justify-center flex-shrink-0">
+                <img [src]="getImageUrl(product.hinh)" [alt]="product.ten_sp" class="max-w-full max-h-full object-contain">
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-bold text-gray-900 truncate">{{ product.ten_sp }}</p>
+                <p class="text-xs text-gray-500">Đã bán: {{ product.total_sold }} sản phẩm</p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm font-black text-blue-600">{{ formatPrice(product.revenue) }}</p>
+              </div>
+            </div>
+          }
+          @if (stats().topProducts.length === 0) {
+            <div class="text-center py-8 text-gray-500 text-sm">
+              Chưa có dữ liệu
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Thống kê bổ sung -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+      
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-orange-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-orange-600 text-[24px]">category</span>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-gray-900">{{ stats().totalCategories }}</h3>
+            <p class="text-sm text-gray-500">Danh mục hãng</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-pink-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-pink-600 text-[24px]">group</span>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-gray-900">{{ stats().totalUsers }}</h3>
+            <p class="text-sm text-gray-500">Người dùng</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+        <div class="flex items-center gap-4">
+          <div class="w-12 h-12 bg-teal-50 rounded-xl flex items-center justify-center">
+            <span class="material-symbols-outlined text-teal-600 text-[24px]">check_circle</span>
+          </div>
+          <div>
+            <h3 class="text-2xl font-black text-gray-900">{{ stats().completedOrders }}</h3>
+            <p class="text-sm text-gray-500">Đơn hoàn thành</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  }
+
+</div>

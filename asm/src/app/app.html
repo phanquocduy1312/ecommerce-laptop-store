@@ -1,0 +1,9 @@
+<div class="w-full m-auto text-[1.2em]">
+  @if (!isAdminRoute()) {
+    <app-header></app-header>
+  }
+  <router-outlet />
+  @if (!isAdminRoute()) {
+    <app-footer />
+  }
+</div>

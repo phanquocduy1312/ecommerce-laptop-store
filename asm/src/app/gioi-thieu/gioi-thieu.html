@@ -1,0 +1,213 @@
+<main class="mt-20">
+  
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-[#001E40] via-[#003875] to-[#0058be] text-white py-32 overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+    </div>
+    
+    <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+      <div class="text-center max-w-4xl mx-auto">
+        <h1 class="text-6xl font-black font-headline mb-6 tracking-tight">
+          Về TechCore
+        </h1>
+        <p class="text-xl text-white/90 leading-relaxed mb-8">
+          Đối tác công nghệ đáng tin cậy của bạn - Mang đến những sản phẩm laptop cao cấp 
+          với dịch vụ chuyên nghiệp và tận tâm
+        </p>
+        <div class="flex items-center justify-center gap-4">
+          <a routerLink="/products" class="px-8 py-4 bg-white text-[#001E40] font-bold rounded-xl hover:bg-gray-100 transition-all flex items-center gap-2">
+            <span>Khám phá sản phẩm</span>
+            <span class="material-symbols-outlined">arrow_forward</span>
+          </a>
+          <a routerLink="/lien-he" class="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold rounded-xl hover:bg-white/20 transition-all">
+            Liên hệ ngay
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Statistics Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-[1440px] mx-auto px-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (stat of statistics(); track $index) {
+          <div class="text-center p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-xl transition-all group">
+            <div class="w-16 h-16 bg-gradient-to-br from-[#0058be] to-[#003875] rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-white text-3xl">{{ stat.icon }}</span>
+            </div>
+            <h3 class="text-4xl font-black text-[#001E40] mb-2">{{ stat.value }}</h3>
+            <p class="text-gray-600 font-medium">{{ stat.label }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- About Story Section -->
+  <section class="py-24 bg-gradient-to-b from-white to-gray-50">
+    <div class="max-w-[1440px] mx-auto px-8">
+      <div class="grid lg:grid-cols-2 gap-16 items-center">
+        <div>
+          <span class="text-[#0058be] font-bold text-sm uppercase tracking-wider mb-4 block">Câu chuyện của chúng tôi</span>
+          <h2 class="text-5xl font-black font-headline text-[#001E40] mb-6 leading-tight">
+            Hành trình mang công nghệ đến gần hơn
+          </h2>
+          <div class="space-y-4 text-gray-700 leading-relaxed">
+            <p>
+              <strong class="text-[#001E40]">TechCore</strong> được thành lập vào năm 2019 với sứ mệnh đơn giản nhưng đầy ý nghĩa: 
+              Mang đến những sản phẩm công nghệ chất lượng cao với giá cả hợp lý và dịch vụ tận tâm nhất.
+            </p>
+            <p>
+              Chúng tôi hiểu rằng laptop không chỉ là một thiết bị điện tử, mà là công cụ đắc lực giúp bạn 
+              học tập, làm việc và sáng tạo. Vì vậy, mỗi sản phẩm chúng tôi cung cấp đều được tuyển chọn 
+              kỹ lưỡng từ các thương hiệu uy tín hàng đầu thế giới.
+            </p>
+            <p>
+              Với đội ngũ nhân viên giàu kinh nghiệm và am hiểu sâu sắc về công nghệ, chúng tôi cam kết 
+              đồng hành cùng bạn trong suốt hành trình sử dụng sản phẩm, từ khâu tư vấn, mua hàng đến 
+              bảo hành và hỗ trợ sau bán.
+            </p>
+          </div>
+        </div>
+        <div class="relative">
+          <div class="aspect-[4/3] rounded-3xl overflow-hidden shadow-2xl">
+            <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800" 
+                 alt="TechCore Office" 
+                 class="w-full h-full object-cover" />
+          </div>
+          <div class="absolute -bottom-8 -left-8 w-64 h-64 bg-[#0058be]/10 rounded-3xl -z-10"></div>
+          <div class="absolute -top-8 -right-8 w-64 h-64 bg-[#e05d00]/10 rounded-3xl -z-10"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="py-24 bg-white">
+    <div class="max-w-[1440px] mx-auto px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-[#0058be] font-bold text-sm uppercase tracking-wider mb-4 block">Tại sao chọn chúng tôi</span>
+        <h2 class="text-5xl font-black font-headline text-[#001E40] mb-6">
+          Những giá trị cốt lõi
+        </h2>
+        <p class="text-gray-600 text-lg">
+          Chúng tôi không chỉ bán laptop, mà còn mang đến trải nghiệm mua sắm hoàn hảo
+        </p>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        @for (feature of features(); track $index) {
+          <div class="p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-xl hover:border-[#0058be]/20 transition-all group">
+            <div class="w-14 h-14 bg-gradient-to-br from-[#0058be] to-[#003875] rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-white text-2xl">{{ feature.icon }}</span>
+            </div>
+            <h3 class="text-xl font-bold text-[#001E40] mb-3">{{ feature.title }}</h3>
+            <p class="text-gray-600 leading-relaxed">{{ feature.description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="py-24 bg-gradient-to-br from-[#001E40] to-[#003875] text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-5">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-white rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-[#0058be] bg-white/10 px-4 py-2 rounded-full font-bold text-sm uppercase tracking-wider mb-4 inline-block">Giá trị cốt lõi</span>
+        <h2 class="text-5xl font-black font-headline mb-6">
+          Những điều chúng tôi tin tưởng
+        </h2>
+      </div>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (value of values(); track $index) {
+          <div class="text-center p-8 rounded-2xl bg-white/5 backdrop-blur-sm border border-white/10 hover:bg-white/10 transition-all">
+            <div class="w-16 h-16 bg-white/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <span class="material-symbols-outlined text-white text-3xl">{{ value.icon }}</span>
+            </div>
+            <h3 class="text-xl font-bold mb-3">{{ value.title }}</h3>
+            <p class="text-white/80 leading-relaxed">{{ value.description }}</p>
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Timeline Section -->
+  <section class="py-24 bg-white">
+    <div class="max-w-[1440px] mx-auto px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-[#0058be] font-bold text-sm uppercase tracking-wider mb-4 block">Hành trình phát triển</span>
+        <h2 class="text-5xl font-black font-headline text-[#001E40] mb-6">
+          Cột mốc quan trọng
+        </h2>
+      </div>
+
+      <div class="relative">
+        <!-- Timeline Line -->
+        <div class="absolute left-1/2 transform -translate-x-1/2 h-full w-1 bg-gradient-to-b from-[#0058be] to-[#003875] hidden lg:block"></div>
+
+        <div class="space-y-12">
+          @for (milestone of milestones(); track $index) {
+            <div class="relative grid lg:grid-cols-2 gap-8 items-center" 
+                 [class.lg:flex-row-reverse]="$index % 2 === 1">
+              
+              <!-- Left Side -->
+              <div [class.lg:text-right]="$index % 2 === 0" 
+                   [class.lg:order-1]="$index % 2 === 1">
+                <div class="inline-block p-8 rounded-2xl bg-gradient-to-br from-gray-50 to-white border border-gray-100 hover:shadow-xl transition-all">
+                  <span class="inline-block px-4 py-2 bg-gradient-to-r from-[#0058be] to-[#003875] text-white font-black rounded-full text-sm mb-4">
+                    {{ milestone.year }}
+                  </span>
+                  <h3 class="text-2xl font-bold text-[#001E40] mb-3">{{ milestone.title }}</h3>
+                  <p class="text-gray-600 leading-relaxed">{{ milestone.description }}</p>
+                </div>
+              </div>
+
+              <!-- Center Dot -->
+              <div class="absolute left-1/2 transform -translate-x-1/2 w-6 h-6 bg-[#0058be] rounded-full border-4 border-white shadow-lg hidden lg:block"></div>
+
+              <!-- Right Side (Empty for spacing) -->
+              <div [class.lg:order-2]="$index % 2 === 0"></div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="py-24 bg-gradient-to-br from-[#0058be] to-[#003875] text-white relative overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-white rounded-full blur-3xl"></div>
+    </div>
+
+    <div class="max-w-[1440px] mx-auto px-8 text-center relative z-10">
+      <h2 class="text-5xl font-black font-headline mb-6">
+        Sẵn sàng trải nghiệm?
+      </h2>
+      <p class="text-xl text-white/90 mb-10 max-w-2xl mx-auto">
+        Khám phá bộ sưu tập laptop cao cấp của chúng tôi và tìm chiếc máy hoàn hảo cho nhu cầu của bạn
+      </p>
+      <div class="flex items-center justify-center gap-4">
+        <a routerLink="/products" class="px-8 py-4 bg-white text-[#001E40] font-bold rounded-xl hover:bg-gray-100 transition-all flex items-center gap-2">
+          <span>Xem sản phẩm</span>
+          <span class="material-symbols-outlined">shopping_bag</span>
+        </a>
+        <a routerLink="/lien-he" class="px-8 py-4 bg-white/10 backdrop-blur-sm border-2 border-white/30 text-white font-bold rounded-xl hover:bg-white/20 transition-all flex items-center gap-2">
+          <span class="material-symbols-outlined">call</span>
+          <span>Liên hệ tư vấn</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>

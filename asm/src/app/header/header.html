@@ -1,0 +1,75 @@
+<nav
+  class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,30,64,0.06)]">
+  <div class="flex justify-between items-center px-8 py-4 max-w-[1440px] mx-auto">
+    <div class="flex items-center gap-12">
+      <a class="text-2xl font-bold tracking-tighter text-blue-950 dark:text-blue-50" href="#">TechCore</a>
+      <!-- Search Bar (on_left context) -->
+      <div class="hidden lg:flex items-center bg-surface-container-high rounded-full px-5 py-2.5 w-[400px]">
+        <span class="material-symbols-outlined text-outline mr-3" data-icon="search">search</span>
+        <input class="bg-transparent border-none focus:ring-0 text-sm w-full font-body"
+          placeholder="Tìm kiếm sản phẩm..." type="text" />
+      </div>
+    </div>
+    <div class="flex items-center gap-8">
+      <div class="hidden md:flex items-center gap-6">
+        <a class="text-slate-600 dark:text-slate-400 hover:text-blue-900 transition-colors font-body text-sm"
+          routerLink="/gioi-thieu" routerLinkActive="text-blue-900 dark:text-blue-100 font-semibold border-b-2 border-orange-500 pb-1">Giới thiệu</a>
+        <a class="text-slate-600 dark:text-slate-400 hover:text-blue-900 transition-colors font-body text-sm"
+          routerLink="/products" routerLinkActive="text-blue-900 dark:text-blue-100 font-semibold border-b-2 border-orange-500 pb-1">Laptop</a>
+        <a class="text-slate-600 dark:text-slate-400 hover:text-blue-900 transition-colors font-body text-sm"
+          routerLink="/lien-he" routerLinkActive="text-blue-900 dark:text-blue-100 font-semibold border-b-2 border-orange-500 pb-1">Liên hệ</a>
+      </div>
+      <div class="flex items-center gap-4">
+       <a routerLink="/cart">
+          <button class="relative p-2 text-primary hover:text-on-tertiary-container transition-all">
+            <span class="material-symbols-outlined">shopping_cart</span>
+            @if (cartCount() > 0) {
+              <span class="absolute top-0 right-0 bg-on-tertiary-container text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full">
+                {{ cartCount() }}
+              </span>
+            }
+          </button>
+       </a>
+        
+        @if (isLoggedIn()) {
+          <div class="relative group">
+            <button class="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-full hover:scale-95 active:scale-100 transition-transform">
+              <span class="material-symbols-outlined text-[20px]" data-icon="account_circle">account_circle</span>
+              <span class="text-sm font-semibold max-w-[120px] truncate">{{ currentUser()?.ho_ten }}</span>
+              <span class="material-symbols-outlined text-[16px]">expand_more</span>
+            </button>
+            
+            <!-- Dropdown Menu -->
+            <div class="absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border border-outline-variant/20 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+              <div class="p-4 border-b border-outline-variant/20">
+                <p class="text-sm font-semibold text-primary truncate">{{ currentUser()?.ho_ten }}</p>
+                <p class="text-xs text-outline truncate">{{ currentUser()?.email }}</p>
+              </div>
+              <div class="py-2">
+                <a routerLink="/profile" class="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <span class="material-symbols-outlined text-[20px] text-primary">person</span>
+                  <span class="text-sm text-on-surface">Tài khoản của tôi</span>
+                </a>
+                <a routerLink="/profile" class="flex items-center gap-3 px-4 py-2.5 hover:bg-surface-container-low transition-colors">
+                  <span class="material-symbols-outlined text-[20px] text-primary">receipt_long</span>
+                  <span class="text-sm text-on-surface">Đơn hàng</span>
+                </a>
+                <div class="border-t border-outline-variant/20 my-2"></div>
+                <button (click)="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-red-50 transition-colors text-left">
+                  <span class="material-symbols-outlined text-[20px] text-red-500">logout</span>
+                  <span class="text-sm text-red-500 font-medium">Đăng xuất</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <a routerLink="/dang-nhap"
+            class="flex items-center gap-2 bg-primary text-white px-5 py-2 rounded-full hover:scale-95 active:scale-100 transition-transform">
+            <span class="material-symbols-outlined text-[20px]" data-icon="account_circle">account_circle</span>
+            <span class="text-sm font-semibold">Đăng nhập</span>
+          </a>
+        }
+      </div>
+    </div>
+  </div>
+</nav>

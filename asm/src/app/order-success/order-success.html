@@ -1,0 +1,164 @@
+<div class="min-h-screen bg-gradient-to-b from-green-50 to-white pt-24 pb-16">
+  <div class="max-w-[800px] mx-auto px-8">
+    
+    <!-- Success Animation -->
+    <div class="text-center mb-8 animate-in fade-in zoom-in duration-700">
+      <div class="inline-flex items-center justify-center w-24 h-24 bg-green-500 rounded-full mb-6 animate-bounce">
+        <span class="material-symbols-outlined text-white text-6xl">check_circle</span>
+      </div>
+      <h1 class="text-4xl font-bold text-green-600 mb-3">Đặt hàng thành công!</h1>
+      <p class="text-lg text-on-surface-variant">Cảm ơn bạn đã mua hàng tại TechCore</p>
+    </div>
+
+    @if (orderInfo(); as order) {
+      <!-- Order Info Card -->
+      <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+        <h2 class="text-2xl font-bold text-primary mb-6 flex items-center gap-2">
+          <span class="material-symbols-outlined">receipt_long</span>
+          Thông tin đơn hàng
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          <!-- Mã đơn hàng -->
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-1">tag</span>
+            <div>
+              <p class="text-sm text-on-surface-variant">Mã đơn hàng</p>
+              <p class="text-lg font-bold text-primary">#{{ order.id }}</p>
+            </div>
+          </div>
+
+          <!-- Tổng tiền -->
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-on-tertiary-container mt-1">payments</span>
+            <div>
+              <p class="text-sm text-on-surface-variant">Tổng tiền</p>
+              <p class="text-lg font-bold text-on-tertiary-container">{{ order.tong_tien | number:'1.0-0' }}₫</p>
+            </div>
+          </div>
+
+          <!-- Người nhận -->
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-1">person</span>
+            <div>
+              <p class="text-sm text-on-surface-variant">Người nhận</p>
+              <p class="font-semibold text-on-surface">{{ order.ho_ten }}</p>
+            </div>
+          </div>
+
+          <!-- Số điện thoại -->
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-1">phone</span>
+            <div>
+              <p class="text-sm text-on-surface-variant">Số điện thoại</p>
+              <p class="font-semibold text-on-surface">{{ order.dien_thoai }}</p>
+            </div>
+          </div>
+
+          <!-- Email -->
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-1">mail</span>
+            <div>
+              <p class="text-sm text-on-surface-variant">Email</p>
+              <p class="font-semibold text-on-surface">{{ order.email }}</p>
+            </div>
+          </div>
+
+          <!-- Địa chỉ -->
+          <div class="flex items-start gap-3">
+            <span class="material-symbols-outlined text-primary mt-1">location_on</span>
+            <div>
+              <p class="text-sm text-on-surface-variant">Địa chỉ giao hàng</p>
+              <p class="font-semibold text-on-surface">{{ order.dia_chi }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ghi chú -->
+        @if (order.ghi_chu) {
+          <div class="pt-6 border-t border-outline-variant/20">
+            <div class="flex items-start gap-3">
+              <span class="material-symbols-outlined text-primary mt-1">note</span>
+              <div>
+                <p class="text-sm text-on-surface-variant mb-1">Ghi chú</p>
+                <p class="text-on-surface">{{ order.ghi_chu }}</p>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Products List -->
+      @if (order.chi_tiet && order.chi_tiet.length > 0) {
+        <div class="bg-white rounded-2xl shadow-lg p-8 mb-6">
+          <h2 class="text-xl font-bold text-primary mb-6 flex items-center gap-2">
+            <span class="material-symbols-outlined">shopping_bag</span>
+            Sản phẩm đã đặt ({{ order.chi_tiet.length }})
+          </h2>
+
+          <div class="space-y-4">
+            @for (item of order.chi_tiet; track $index) {
+              <div class="flex items-center gap-4 pb-4 border-b border-outline-variant/20 last:border-0">
+                <div class="flex-1">
+                  <h3 class="font-semibold text-on-surface mb-1">{{ item.ten_sp }}</h3>
+                  <p class="text-sm text-on-surface-variant">
+                    Số lượng: <span class="font-semibold">{{ item.so_luong }}</span> × 
+                    <span class="font-semibold text-on-tertiary-container">{{ item.gia | number:'1.0-0' }}₫</span>
+                  </p>
+                </div>
+                <div class="text-right">
+                  <p class="text-lg font-bold text-on-tertiary-container">
+                    {{ (item.so_luong * item.gia) | number:'1.0-0' }}₫
+                  </p>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    }
+
+    <!-- Info Box -->
+    <div class="bg-blue-50 border-l-4 border-blue-500 rounded-lg p-6 mb-6">
+      <div class="flex items-start gap-3">
+        <span class="material-symbols-outlined text-blue-500 text-3xl">info</span>
+        <div>
+          <h3 class="font-bold text-blue-900 mb-2">Thông tin quan trọng</h3>
+          <ul class="space-y-2 text-sm text-blue-800">
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-sm mt-0.5">check</span>
+              <span>Đơn hàng của bạn đang được xử lý và sẽ được giao trong 2-3 ngày làm việc</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-sm mt-0.5">check</span>
+              <span>Chúng tôi đã gửi email xác nhận đơn hàng đến {{ orderInfo()?.email }}</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-sm mt-0.5">check</span>
+              <span>Bạn sẽ thanh toán khi nhận hàng (COD)</span>
+            </li>
+            <li class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-sm mt-0.5">check</span>
+              <span>Mọi thắc mắc vui lòng liên hệ hotline: 1900-xxxx</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+      <a routerLink="/" 
+         class="flex items-center justify-center gap-2 bg-primary text-white px-8 py-4 rounded-full hover:scale-95 transition-transform font-semibold shadow-lg">
+        <span class="material-symbols-outlined">home</span>
+        <span>Về trang chủ</span>
+      </a>
+      <a routerLink="/products" 
+         class="flex items-center justify-center gap-2 bg-on-tertiary-container text-white px-8 py-4 rounded-full hover:scale-95 transition-transform font-semibold shadow-lg">
+        <span class="material-symbols-outlined">shopping_bag</span>
+        <span>Tiếp tục mua sắm</span>
+      </a>
+    </div>
+
+  </div>
+</div>

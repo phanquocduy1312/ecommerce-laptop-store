@@ -1,0 +1,74 @@
+<div class="flex items-center gap-4 border-b-2 border-emerald-500 mb-10 pb-4">
+    <div class="bg-emerald-600 text-white p-3 rounded-2xl shadow-lg">
+        <i class="fa-solid fa-layer-group text-xl"></i>
+    </div>
+    <div>
+        <p class="text-xs font-bold text-emerald-600 uppercase tracking-widest">Danh mục sản phẩm</p>
+        <h2 class="text-2xl font-black text-gray-800 uppercase italic">
+            {{ loai.ten_loai }}
+        </h2>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+    @for (sp of sp_arr(); track sp.id) {
+    <div class="group relative bg-white rounded-3xl border border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-500 flex flex-col h-full overflow-hidden">
+        
+        <div class="absolute top-4 left-4 z-10 flex flex-col gap-2">
+            @if(sp.hot == 1) {
+                <span class="bg-orange-500 text-white text-[10px] font-black px-3 py-1 rounded-lg shadow-sm">HOT</span>
+            }
+            @if(sp.gia > sp.gia_km) {
+                <span class="bg-red-600 text-white text-[10px] font-black px-3 py-1 rounded-lg shadow-sm">
+                    -{{ ((sp.gia - sp.gia_km) / sp.gia * 100) | number:'1.0-0' }}%
+                </span>
+            }
+        </div>
+
+        <div [routerLink]="['/sp', sp.id]" class="cursor-pointer relative aspect-square p-6 bg-gray-50 flex items-center justify-center">
+            <img [src]="sp.hinh" 
+                 class="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700" 
+                 [alt]="sp.ten_sp" />
+        </div>
+
+        <div class="p-5 flex flex-col flex-grow">
+            <h3 [routerLink]="['/sp', sp.id]" 
+                class="cursor-pointer text-gray-800 font-bold text-base leading-tight h-[44px] line-clamp-2 hover:text-emerald-600 transition-colors mb-3">
+                {{ sp.ten_sp }}
+            </h3>
+
+            <div class="mt-auto">
+                <div class="flex items-baseline gap-2 mb-3">
+                    <span class="text-xl font-black text-red-600">
+                        {{ sp.gia_km | number:'1.0-0' }} <small class="text-xs underline">đ</small>
+                    </span>
+                    @if(sp.gia > sp.gia_km) {
+                        <span class="text-sm text-gray-400 line-through">
+                            {{ sp.gia | number:'1.0-0' }}đ
+                        </span>
+                    }
+                </div>
+
+                <div class="flex items-center justify-between border-t border-gray-50 pt-3 text-[11px] text-gray-400 font-medium">
+                    <span><i class="fa-regular fa-calendar mr-1"></i> {{ sp.ngay | date:'dd/MM/yyyy' }}</span>
+                    <span><i class="fa-regular fa-eye mr-1"></i> {{ sp.luot_xem | number }}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-5 pb-5 mt-2">
+            <button class="w-full bg-emerald-600 text-white py-3 rounded-xl font-bold text-[11px] uppercase tracking-widest hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-100 flex items-center justify-center gap-2">
+                <i class="fa-solid fa-cart-shopping"></i> Mua ngay
+            </button>
+        </div>
+    </div>
+    }
+</div>
+
+@if(sp_arr().length === 0) {
+    <div class="text-center py-20 bg-gray-50 rounded-3xl border-2 border-dashed border-gray-200">
+        <i class="fa-solid fa-box-open text-5xl text-gray-300 mb-4"></i>
+        <p class="text-gray-500 font-medium">Hiện chưa có sản phẩm nào trong danh mục này.</p>
+        <button routerLink="/" class="mt-4 text-emerald-600 font-bold underline">Quay lại trang chủ</button>
+    </div>
+}

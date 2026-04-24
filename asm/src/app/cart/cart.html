@@ -1,0 +1,147 @@
+<main class="pt-28 pb-20 px-4 md:px-8 max-w-[1440px] mx-auto min-h-screen">
+  
+  <header class="mb-10">
+    <h1 class="text-3xl md:text-4xl font-bold font-headline text-primary tracking-tight">
+      Giỏ hàng của bạn ({{ totalItems() }} sản phẩm)
+    </h1>
+    <div class="h-1 w-20 bg-on-tertiary-container mt-4 rounded-full"></div>
+  </header>
+
+  <!-- Empty Cart -->
+  @if (cartItems().length === 0) {
+    <div class="text-center py-20">
+      <span class="material-symbols-outlined text-8xl text-gray-300 mb-4">shopping_cart</span>
+      <p class="text-xl text-gray-500 mb-6">Giỏ hàng của bạn đang trống</p>
+      <a routerLink="/" class="inline-block bg-primary text-white px-8 py-3 rounded-full font-bold hover:opacity-90 transition">
+        Tiếp tục mua sắm
+      </a>
+    </div>
+  }
+
+  <!-- Cart with Items -->
+  @if (cartItems().length > 0) {
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Product List Section -->
+      <div class="lg:col-span-2 space-y-4">
+        
+        @for (item of cartItems(); track item.product.id) {
+          <div class="bg-surface-container-lowest p-6 rounded-xl shadow-[0_4px_20px_rgba(0,30,64,0.04)] flex flex-col md:flex-row items-center gap-6 group hover:shadow-[0_8px_32px_rgba(0,30,64,0.08)] transition-all duration-300">
+            
+            <!-- Product Image -->
+            <div class="w-24 h-24 md:w-32 md:h-32 rounded-lg bg-surface-container-low flex-shrink-0 overflow-hidden">
+              <img 
+                [alt]="item.product.ten_sp" 
+                class="w-full h-full object-cover mix-blend-multiply group-hover:scale-105 transition-transform duration-500" 
+                [src]="item.product.hinh" />
+            </div>
+
+            <!-- Product Info -->
+            <div class="flex-grow text-center md:text-left">
+              <h3 class="font-headline font-semibold text-lg text-primary">{{ item.product.ten_sp }}</h3>
+              @if (item.product.gia_km && item.product.gia_km > 0) {
+                <div class="mt-2 flex items-center justify-center md:justify-start gap-3">
+                  <span class="text-primary font-semibold">{{ item.product.gia_km | number:'1.0-0' }}đ</span>
+                  <span class="text-xs text-gray-400 line-through">{{ item.product.gia | number:'1.0-0' }}đ</span>
+                </div>
+              } @else {
+                <div class="mt-2">
+                  <span class="text-primary font-semibold">{{ item.product.gia | number:'1.0-0' }}đ</span>
+                </div>
+              }
+            </div>
+
+            <!-- Quantity & Price -->
+            <div class="flex flex-col items-center gap-4">
+              <div class="flex items-center bg-surface-container-low rounded-full px-3 py-1">
+                <button 
+                  (click)="decreaseQuantity(item.product.id, item.quantity)"
+                  [disabled]="item.quantity <= 1"
+                  class="w-8 h-8 flex items-center justify-center hover:text-on-tertiary-container transition-colors disabled:opacity-50">
+                  <span class="material-symbols-outlined text-sm">remove</span>
+                </button>
+                <span class="w-10 text-center font-bold font-body">{{ item.quantity }}</span>
+                <button 
+                  (click)="increaseQuantity(item.product.id, item.quantity)"
+                  class="w-8 h-8 flex items-center justify-center hover:text-on-tertiary-container transition-colors">
+                  <span class="material-symbols-outlined text-sm">add</span>
+                </button>
+              </div>
+              <span class="font-bold text-primary">{{ getItemTotal(item) | number:'1.0-0' }}đ</span>
+            </div>
+
+            <!-- Delete Button -->
+            <button 
+              (click)="removeItem(item.product.id)"
+              class="p-2 text-slate-400 hover:text-error transition-colors">
+              <span class="material-symbols-outlined">delete</span>
+            </button>
+          </div>
+        }
+
+        <!-- Action links -->
+        <div class="flex justify-between items-center pt-4">
+          <a routerLink="/" class="flex items-center gap-2 text-primary font-medium hover:text-on-tertiary-container transition-all group">
+            <span class="material-symbols-outlined transition-transform group-hover:-translate-x-1">arrow_back</span>
+            Tiếp tục mua sắm
+          </a>
+          <button 
+            (click)="clearCart()"
+            class="flex items-center gap-2 text-error font-medium hover:text-red-700 transition-all">
+            <span class="material-symbols-outlined">delete_sweep</span>
+            Xóa tất cả
+          </button>
+        </div>
+      </div>
+
+      <!-- Summary Sidebar -->
+      <div class="lg:col-span-1">
+        <div class="bg-surface-container-lowest p-8 rounded-xl shadow-[0_8px_32px_rgba(0,30,64,0.06)] sticky top-28 border border-surface-container">
+          <h2 class="font-headline font-bold text-xl text-primary mb-6">Tổng thanh toán</h2>
+          
+          <div class="space-y-4 mb-8">
+            <div class="flex justify-between items-center text-slate-600">
+              <span class="font-body text-sm">Tạm tính</span>
+              <span class="font-bold text-primary">{{ totalPrice() | number:'1.0-0' }}đ</span>
+            </div>
+            <div class="flex justify-between items-center text-slate-600">
+              <span class="font-body text-sm">Phí vận chuyển</span>
+              <span class="font-bold text-green-600">Miễn phí</span>
+            </div>
+          </div>
+
+          <div class="mb-8">
+            <label class="block text-xs font-bold text-slate-400 uppercase tracking-widest mb-2">Mã giảm giá</label>
+            <div class="flex gap-2">
+              <input 
+                class="flex-grow bg-surface-container-low border-none rounded-full px-4 py-2 text-sm focus:ring-2 focus:ring-primary/20 outline-none" 
+                placeholder="Nhập mã..." 
+                type="text" />
+              <button class="bg-primary text-white px-6 py-2 rounded-full text-sm font-semibold hover:bg-primary-container transition-colors">
+                Áp dụng
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-6 border-t border-surface-container space-y-6">
+            <div class="flex justify-between items-end">
+              <span class="font-headline font-semibold text-slate-600">Tổng cộng</span>
+              <span class="font-headline font-bold text-3xl text-on-tertiary-container">{{ totalPrice() | number:'1.0-0' }}đ</span>
+            </div>
+            
+            <a routerLink="/checkout" class="block w-full bg-on-tertiary-container text-white py-4 rounded-full font-headline font-bold text-lg shadow-lg shadow-orange-500/20 hover:scale-[1.02] active:scale-95 transition-all text-center">
+              TIẾN HÀNH THANH TOÁN
+            </a>
+            
+            <div class="flex items-center justify-center gap-4 text-slate-400">
+              <span class="material-symbols-outlined text-lg">verified_user</span>
+              <span class="text-[10px] font-label uppercase tracking-wider">Thanh toán bảo mật 100%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  }
+  
+</main>

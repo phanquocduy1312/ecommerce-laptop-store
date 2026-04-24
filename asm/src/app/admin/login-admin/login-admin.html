@@ -1,0 +1,82 @@
+<div class="min-h-screen bg-[#f8fafc] flex items-center justify-center p-6">
+  
+  <div class="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-md p-8 hover:shadow-md transition-shadow">
+    
+    <div class="text-center mb-8">
+      <div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined text-blue-600 text-[32px]">admin_panel_settings</span>
+      </div>
+      <h1 class="text-2xl font-black text-gray-900 tracking-tight leading-none">Đăng nhập quản trị</h1>
+      <p class="text-sm text-gray-500 mt-2 font-medium">Hệ thống quản lý TechCore</p>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+      
+      @if (errorMessage()) {
+        <div class="bg-red-50 border border-red-100 text-red-600 text-sm font-bold p-4 rounded-xl flex items-center gap-3 animate-fade-in">
+          <span class="material-symbols-outlined text-[20px]">error</span>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <div>
+        <label class="block text-sm font-bold text-gray-700 mb-2">Email</label>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <span class="material-symbols-outlined text-gray-400 text-[20px]">person</span>
+          </div>
+          <input type="email" formControlName="email"
+            class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all text-sm font-medium text-gray-900"
+            placeholder="admin@techcore.vn" 
+            [class.!border-red-500]="isFieldInvalid('email')">
+        </div>
+        @if (isFieldInvalid('email')) {
+          <p class="text-xs font-bold text-red-500 mt-1.5">Vui lòng nhập email hợp lệ.</p>
+        }
+      </div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <label class="block text-sm font-bold text-gray-700">Mật khẩu</label>
+        </div>
+        <div class="relative">
+          <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <span class="material-symbols-outlined text-gray-400 text-[20px]">lock</span>
+          </div>
+          <input [type]="showPassword() ? 'text' : 'password'" formControlName="mat_khau"
+            class="w-full pl-11 pr-12 py-3 rounded-xl border border-gray-200 focus:border-blue-600 focus:ring-4 focus:ring-blue-600/10 outline-none transition-all text-sm font-medium text-gray-900"
+            placeholder="••••••••" 
+            [class.!border-red-500]="isFieldInvalid('mat_khau')">
+          <button type="button" (click)="togglePassword()" 
+            class="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors">
+            <span class="material-symbols-outlined text-[20px]">{{ showPassword() ? 'visibility_off' : 'visibility' }}</span>
+          </button>
+        </div>
+        @if (isFieldInvalid('mat_khau')) {
+          <p class="text-xs font-bold text-red-500 mt-1.5">Mật khẩu không được để trống (tối thiểu 6 ký tự).</p>
+        }
+      </div>
+
+      <div class="flex items-center justify-between pt-2">
+        <label class="flex items-center cursor-pointer">
+          <input type="checkbox" formControlName="rememberMe" 
+            class="w-4 h-4 rounded border-gray-300 text-blue-600 focus:ring-blue-600/20 transition-all">
+          <span class="ml-2 text-sm font-bold text-gray-600">Ghi nhớ tôi</span>
+        </label>
+        <a href="#" class="text-sm font-bold text-blue-600 hover:text-blue-700 transition-colors">Quên mật khẩu?</a>
+      </div>
+
+      <button type="submit" [disabled]="loading()"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-black py-3.5 px-4 rounded-xl transition-all flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed mt-4 shadow-sm hover:shadow">
+        @if (loading()) {
+          <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+          <span>Đang xác thực...</span>
+        } @else {
+          <span>Đăng nhập hệ thống</span>
+          <span class="material-symbols-outlined text-[20px]">login</span>
+        }
+      </button>
+
+    </form>
+  </div>
+</div>

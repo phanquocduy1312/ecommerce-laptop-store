@@ -1,0 +1,273 @@
+<main class="max-w-[1200px] mx-auto px-8 py-10 mt-24">
+
+  @if (loading()) {
+    <div class="text-center py-20">
+      <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-gray-200 border-t-primary"></div>
+      <p class="text-lg text-gray-500 mt-4">Đang tải thông tin đơn hàng...</p>
+    </div>
+  }
+
+  @if (!loading() && order(); as o) {
+    
+    <!-- Breadcrumb -->
+    <nav class="flex items-center gap-2 text-on-surface-variant text-sm mb-8">
+      <a routerLink="/" class="hover:text-primary transition">Trang chủ</a>
+      <span class="material-symbols-outlined text-base">chevron_right</span>
+      <a routerLink="/profile" class="hover:text-primary transition">Tài khoản</a>
+      <span class="material-symbols-outlined text-base">chevron_right</span>
+      <span class="text-[#001E40] font-medium">Chi tiết đơn hàng #{{ o.id }}</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-primary-container to-[#e05d00] rounded-2xl p-8 text-white mb-8 shadow-xl">
+      <div class="flex flex-wrap items-center justify-between gap-6">
+        <div>
+          <div class="flex items-center gap-3 mb-3">
+            <span class="material-symbols-outlined text-5xl">receipt_long</span>
+            <h1 class="text-4xl font-black font-headline">Đơn hàng #{{ o.id }}</h1>
+          </div>
+          <p class="text-white/90 text-lg">{{ formatDate(o.ngay) }}</p>
+        </div>
+        <div class="flex items-center gap-4">
+          <div [class]="getStatusColor(o.trang_thai) + ' px-6 py-3 rounded-xl text-lg font-bold flex items-center gap-2'">
+            <span class="material-symbols-outlined">{{ getStatusIcon(o.trang_thai) }}</span>
+            {{ getStatusText(o.trang_thai) }}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-8">
+        
+        <!-- Products -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-primary-container/10 to-transparent p-6 border-b border-surface-container-high">
+            <h2 class="text-2xl font-black font-headline text-primary-container flex items-center gap-3">
+              <span class="material-symbols-outlined text-3xl">shopping_cart</span>
+              Sản phẩm đã đặt
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            @if (o.chi_tiet && o.chi_tiet.length > 0) {
+              <div class="space-y-4">
+                @for (item of o.chi_tiet; track item.id) {
+                  @if (item.san_pham) {
+                    <div class="flex gap-6 p-5 bg-surface-container-low rounded-xl hover:shadow-md transition-all">
+                      <a [routerLink]="['/sp', item.san_pham.id]" class="flex-shrink-0">
+                        <img 
+                          [src]="item.san_pham.hinh" 
+                          [alt]="item.san_pham.ten_sp"
+                          class="w-28 h-28 object-cover rounded-lg border-2 border-surface-container-high">
+                      </a>
+                      <div class="flex-1 flex flex-col justify-between">
+                        <div>
+                          <a [routerLink]="['/sp', item.san_pham.id]" class="text-lg font-bold text-on-surface hover:text-primary-container transition-colors line-clamp-2">
+                            {{ item.san_pham.ten_sp }}
+                          </a>
+                          <div class="flex items-center gap-6 mt-3">
+                            <div class="flex items-center gap-2">
+                              <span class="text-sm text-on-surface-variant">Đơn giá:</span>
+                              <span class="text-lg font-bold text-on-tertiary-container">{{ item.gia | number:'1.0-0' }}đ</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                              <span class="text-sm text-on-surface-variant">Số lượng:</span>
+                              <span class="px-3 py-1 bg-primary-container/10 text-primary-container font-bold rounded-lg">x{{ item.so_luong }}</span>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="flex items-center justify-between pt-3 border-t border-surface-container-high mt-3">
+                          <span class="text-sm text-on-surface-variant">Thành tiền:</span>
+                          <span class="text-xl font-black text-on-tertiary-container">{{ (item.gia * item.so_luong) | number:'1.0-0' }}đ</span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                }
+              </div>
+            } @else {
+              <p class="text-center text-on-surface-variant py-8">Không có sản phẩm</p>
+            }
+          </div>
+        </div>
+
+        <!-- Order Timeline -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-primary-container/10 to-transparent p-6 border-b border-surface-container-high">
+            <h2 class="text-2xl font-black font-headline text-primary-container flex items-center gap-3">
+              <span class="material-symbols-outlined text-3xl">timeline</span>
+              Trạng thái đơn hàng
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <div class="relative">
+              <div class="absolute left-6 top-0 bottom-0 w-0.5 bg-surface-container-high"></div>
+              
+              <div class="space-y-6">
+                <!-- Đã đặt hàng -->
+                <div class="relative flex gap-4">
+                  <div class="flex-shrink-0 w-12 h-12 rounded-full bg-green-500 text-white flex items-center justify-center z-10">
+                    <span class="material-symbols-outlined">check</span>
+                  </div>
+                  <div class="flex-1 pt-2">
+                    <p class="font-bold text-on-surface">Đơn hàng đã được đặt</p>
+                    <p class="text-sm text-on-surface-variant">{{ formatDate(o.ngay) }}</p>
+                  </div>
+                </div>
+
+                <!-- Đã xác nhận -->
+                <div class="relative flex gap-4">
+                  <div [class]="o.trang_thai >= 1 ? 'bg-green-500' : 'bg-surface-container-high'" class="flex-shrink-0 w-12 h-12 rounded-full text-white flex items-center justify-center z-10">
+                    <span class="material-symbols-outlined">{{ o.trang_thai >= 1 ? 'check' : 'schedule' }}</span>
+                  </div>
+                  <div class="flex-1 pt-2">
+                    <p class="font-bold text-on-surface">Đã xác nhận</p>
+                    <p class="text-sm text-on-surface-variant">{{ o.trang_thai >= 1 ? 'Đơn hàng đã được xác nhận' : 'Chờ xác nhận' }}</p>
+                  </div>
+                </div>
+
+                <!-- Đang giao -->
+                <div class="relative flex gap-4">
+                  <div [class]="o.trang_thai >= 2 ? 'bg-green-500' : 'bg-surface-container-high'" class="flex-shrink-0 w-12 h-12 rounded-full text-white flex items-center justify-center z-10">
+                    <span class="material-symbols-outlined">{{ o.trang_thai >= 2 ? 'check' : 'local_shipping' }}</span>
+                  </div>
+                  <div class="flex-1 pt-2">
+                    <p class="font-bold text-on-surface">Đang giao hàng</p>
+                    <p class="text-sm text-on-surface-variant">{{ o.trang_thai >= 2 ? 'Đơn hàng đang được giao' : 'Chưa giao hàng' }}</p>
+                  </div>
+                </div>
+
+                <!-- Hoàn thành -->
+                <div class="relative flex gap-4">
+                  <div [class]="o.trang_thai >= 3 ? 'bg-green-500' : 'bg-surface-container-high'" class="flex-shrink-0 w-12 h-12 rounded-full text-white flex items-center justify-center z-10">
+                    <span class="material-symbols-outlined">{{ o.trang_thai >= 3 ? 'done_all' : 'inventory' }}</span>
+                  </div>
+                  <div class="flex-1 pt-2">
+                    <p class="font-bold text-on-surface">Đã giao hàng</p>
+                    <p class="text-sm text-on-surface-variant">{{ o.trang_thai >= 3 ? 'Giao hàng thành công' : 'Chưa giao hàng' }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-8">
+        
+        <!-- Customer Info -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-primary-container/10 to-transparent p-6 border-b border-surface-container-high">
+            <h2 class="text-xl font-black font-headline text-primary-container flex items-center gap-3">
+              <span class="material-symbols-outlined text-2xl">person</span>
+              Thông tin khách hàng
+            </h2>
+          </div>
+          
+          <div class="p-6 space-y-4">
+            <div>
+              <p class="text-sm text-on-surface-variant mb-1">Họ và tên</p>
+              <p class="font-bold text-on-surface">{{ o.ho_ten }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-on-surface-variant mb-1">Email</p>
+              <p class="font-bold text-on-surface">{{ o.email }}</p>
+            </div>
+            <div>
+              <p class="text-sm text-on-surface-variant mb-1">Số điện thoại</p>
+              <p class="font-bold text-on-surface">{{ o.dien_thoai }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="bg-surface-container-lowest rounded-2xl shadow-lg overflow-hidden">
+          <div class="bg-gradient-to-r from-primary-container/10 to-transparent p-6 border-b border-surface-container-high">
+            <h2 class="text-xl font-black font-headline text-primary-container flex items-center gap-3">
+              <span class="material-symbols-outlined text-2xl">location_on</span>
+              Địa chỉ giao hàng
+            </h2>
+          </div>
+          
+          <div class="p-6">
+            <p class="text-on-surface leading-relaxed">{{ o.dia_chi }}</p>
+          </div>
+        </div>
+
+        <!-- Note -->
+        @if (o.ghi_chu) {
+          <div class="bg-surface-container-lowest rounded-2xl shadow-lg overflow-hidden">
+            <div class="bg-gradient-to-r from-primary-container/10 to-transparent p-6 border-b border-surface-container-high">
+              <h2 class="text-xl font-black font-headline text-primary-container flex items-center gap-3">
+                <span class="material-symbols-outlined text-2xl">note</span>
+                Ghi chú
+              </h2>
+            </div>
+            
+            <div class="p-6">
+              <p class="text-on-surface leading-relaxed">{{ o.ghi_chu }}</p>
+            </div>
+          </div>
+        }
+
+        <!-- Order Summary -->
+        <div class="bg-gradient-to-br from-primary-container to-[#e05d00] rounded-2xl shadow-xl overflow-hidden text-white">
+          <div class="p-6 border-b border-white/20">
+            <h2 class="text-xl font-black font-headline flex items-center gap-3">
+              <span class="material-symbols-outlined text-2xl">payments</span>
+              Tổng thanh toán
+            </h2>
+          </div>
+          
+          <div class="p-6 space-y-4">
+            <div class="flex items-center justify-between text-white/90">
+              <span>Tạm tính:</span>
+              <span class="font-bold">{{ calculateSubtotal() | number:'1.0-0' }}đ</span>
+            </div>
+            <div class="flex items-center justify-between text-white/90">
+              <span>Phí vận chuyển:</span>
+              <span class="font-bold">Miễn phí</span>
+            </div>
+            <div class="border-t border-white/20 pt-4">
+              <div class="flex items-center justify-between">
+                <span class="text-xl font-bold">Tổng cộng:</span>
+                <span class="text-3xl font-black">{{ o.tong_tien | number:'1.0-0' }}đ</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="space-y-3">
+          <a routerLink="/profile" class="block w-full px-6 py-3 bg-primary-container text-white rounded-xl font-bold text-center hover:bg-[#e05d00] transition-all">
+            Quay lại tài khoản
+          </a>
+          <a routerLink="/products" class="block w-full px-6 py-3 bg-surface-container-low text-on-surface rounded-xl font-bold text-center hover:bg-surface-container-high transition-all">
+            Tiếp tục mua sắm
+          </a>
+        </div>
+
+      </div>
+
+    </div>
+
+  }
+
+  @if (!loading() && !order()) {
+    <div class="text-center py-20">
+      <span class="material-symbols-outlined text-8xl text-on-surface-variant/30 mb-4">error</span>
+      <p class="text-xl text-on-surface-variant mb-6">Không tìm thấy đơn hàng</p>
+      <a routerLink="/profile" class="inline-flex items-center gap-2 px-6 py-3 bg-primary-container text-white rounded-xl font-bold hover:bg-[#e05d00] transition-all">
+        <span class="material-symbols-outlined">arrow_back</span>
+        Quay lại
+      </a>
+    </div>
+  }
+
+</main>

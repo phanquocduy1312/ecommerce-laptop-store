@@ -1,0 +1,138 @@
+<section class="max-w-[1440px] mx-auto px-6 lg:px-12">
+  <div class="bg-white rounded-2xl p-8 border border-red-50 shadow-sm relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-1 h-full bg-red-600"></div>
+    
+    <!-- Header -->
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex items-center gap-6">
+        <div class="flex items-center gap-2 text-red-600">
+          <span class="material-symbols-outlined text-3xl fill-1">bolt</span>
+          <h2 class="text-2xl font-bold font-headline uppercase">Flash Sale</h2>
+        </div>
+        
+        <!-- Countdown Timer - ĐỘNG -->
+        <div class="flex items-center gap-3">
+          <span class="text-sm font-medium text-gray-500 italic">Kết thúc trong:</span>
+          <div class="flex gap-1.5">
+            <!-- Giờ -->
+            <span class="bg-red-600 text-white px-2 py-1.5 rounded font-bold text-sm min-w-[32px] text-center">
+              {{ formatTime(hours()) }}
+            </span>
+            <span class="text-red-600 font-bold">:</span>
+            
+            <!-- Phút -->
+            <span class="bg-red-600 text-white px-2 py-1.5 rounded font-bold text-sm min-w-[32px] text-center">
+              {{ formatTime(minutes()) }}
+            </span>
+            <span class="text-red-600 font-bold">:</span>
+            
+            <!-- Giây -->
+            <span class="bg-red-600 text-white px-2 py-1.5 rounded font-bold text-sm min-w-[32px] text-center">
+              {{ formatTime(seconds()) }}
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <a class="text-tech-blue font-bold text-sm hover:text-secondary flex items-center gap-1 group" href="#">
+        Xem tất cả 
+        <span class="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">chevron_right</span>
+      </a>
+    </div>
+
+    <!-- Loading -->
+    @if (loading()) {
+      <div class="text-center py-12">
+        <p class="text-gray-500">Đang tải sản phẩm...</p>
+      </div>
+    }
+
+    <!-- Error -->
+    @if (error()) {
+      <div class="text-center py-12">
+        <p class="text-red-600">{{ error() }}</p>
+        <button (click)="loadSaleProduct()" class="mt-4 text-tech-blue font-bold">
+          Thử lại
+        </button>
+      </div>
+    }
+
+    <!-- Products Grid -->
+    @if (!loading() && !error()) {
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-6">
+        
+        @for (product of arr_sp(); track product.id) {
+          <div class="product-card bg-white rounded-xl border border-gray-100 p-4 relative group cursor-pointer">
+            
+            <!-- Discount Badge -->
+            @if (product.gia_km) {
+              <div class="absolute top-2 left-2 z-10">
+                <span class="bg-red-600 text-white text-[10px] font-black px-2 py-0.5 rounded-sm">
+                  -{{ ((product.gia - product.gia_km) / product.gia * 100) | number:'1.0-0' }}%
+                </span>
+              </div>
+            }
+            
+            <!-- Product Image -->
+            <div class="aspect-square mb-4 flex items-center justify-center bg-gray-50 rounded-lg overflow-hidden relative">
+              <a [routerLink]="['/product', product.id]">
+                <img 
+                  [alt]="product.ten_sp" 
+                  [src]="getImageUrl(product.hinh)"
+                  class="w-full h-full object-contain p-4 group-hover:scale-110 transition-transform duration-500" />
+              </a>
+              
+              <button class="absolute bottom-2 inset-x-2 bg-white/90 backdrop-blur-sm text-tech-blue text-[10px] font-bold py-2 rounded shadow-sm opacity-0 group-hover:opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all">
+                XEM NHANH
+              </button>
+            </div>
+            
+            <!-- Product Name -->
+            <h3 class="text-xs font-semibold text-gray-800 line-clamp-2 mb-2 h-8">
+              <a [routerLink]="['/product', product.id]">
+                {{ product.ten_sp }}
+              </a>
+            </h3>
+            
+            <!-- Price -->
+            <div class="flex items-baseline gap-2 mb-3">
+              @if (product.gia_km) {
+                <span class="text-lg font-black text-red-600">
+                  {{ product.gia_km | number:'1.0-0' }}đ
+                </span>
+                <span class="text-[10px] text-gray-400 line-through">
+                  {{ product.gia | number:'1.0-0' }}đ
+                </span>
+              } @else {
+                <span class="text-lg font-black text-red-600">
+                  {{ product.gia | number:'1.0-0' }}đ
+                </span>
+              }
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="bg-gray-100 h-1.5 rounded-full overflow-hidden relative">
+              <div class="absolute top-0 left-0 h-full bg-gradient-to-r from-red-600 to-orange-400 rounded-full"
+                   [style.width]="(product.luot_xem % 100) + '%'">
+              </div>
+            </div>
+            
+            <!-- Sold Count -->
+            <p class="text-[9px] text-gray-400 font-bold mt-1 uppercase text-right">
+              {{ product.luot_xem }} lượt xem
+            </p>
+          </div>
+        }
+        
+      </div>
+    } 
+ 
+    <!-- Empty State -->
+    @if (!loading() && !error() && arr_sp().length === 0) {
+      <div class="text-center py-12">
+        <p class="text-gray-500">Không có sản phẩm sale nào</p>
+      </div>
+    }
+    
+  </div>
+</section>

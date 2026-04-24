@@ -1,0 +1,222 @@
+<main class="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 flex items-center justify-center py-12 px-4">
+  
+  <div class="max-w-md w-full">
+    
+    <!-- Card -->
+    <div class="bg-white rounded-2xl shadow-2xl overflow-hidden">
+      
+      <!-- Header -->
+      <div class="bg-gradient-to-r from-primary-container to-[#e05d00] p-8 text-white text-center">
+        <div class="w-20 h-20 bg-white/20 rounded-full flex items-center justify-center mx-auto mb-4">
+          <span class="material-symbols-outlined text-5xl">lock_reset</span>
+        </div>
+        <h1 class="text-3xl font-black font-headline">Quên mật khẩu</h1>
+        <p class="text-white/90 mt-2">Đặt lại mật khẩu của bạn</p>
+      </div>
+
+      <!-- Progress Steps -->
+      <div class="px-8 pt-6">
+        <div class="flex items-center justify-between mb-8">
+          <div class="flex flex-col items-center flex-1">
+            <div [class]="step() >= 1 ? 'bg-primary-container' : 'bg-gray-300'" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-all">
+              @if (step() > 1) {
+                <span class="material-symbols-outlined">check</span>
+              } @else {
+                1
+              }
+            </div>
+            <span class="text-xs mt-2 font-medium" [class.text-primary-container]="step() >= 1">Email</span>
+          </div>
+          <div [class]="step() >= 2 ? 'bg-primary-container' : 'bg-gray-300'" class="flex-1 h-1 mx-2 transition-all"></div>
+          <div class="flex flex-col items-center flex-1">
+            <div [class]="step() >= 2 ? 'bg-primary-container' : 'bg-gray-300'" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-all">
+              @if (step() > 2) {
+                <span class="material-symbols-outlined">check</span>
+              } @else {
+                2
+              }
+            </div>
+            <span class="text-xs mt-2 font-medium" [class.text-primary-container]="step() >= 2">OTP</span>
+          </div>
+          <div [class]="step() >= 3 ? 'bg-primary-container' : 'bg-gray-300'" class="flex-1 h-1 mx-2 transition-all"></div>
+          <div class="flex flex-col items-center flex-1">
+            <div [class]="step() >= 3 ? 'bg-primary-container' : 'bg-gray-300'" class="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold transition-all">
+              3
+            </div>
+            <span class="text-xs mt-2 font-medium" [class.text-primary-container]="step() >= 3">Mật khẩu</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="p-8">
+        
+        <!-- Bước 1: Nhập Email -->
+        @if (step() === 1) {
+          <div class="space-y-6">
+            <div>
+              <p class="text-center text-on-surface-variant mb-6">
+                Nhập email của bạn để nhận mã xác thực
+              </p>
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">mail</span>
+                <input
+                  [(ngModel)]="email"
+                  type="email"
+                  placeholder="Email của bạn"
+                  class="w-full pl-12 pr-4 py-3 border-2 border-surface-container-high rounded-xl focus:border-primary-container focus:outline-none transition-all"
+                  [disabled]="loading()"
+                  (keyup.enter)="sendOTP()">
+              </div>
+            </div>
+
+            <button
+              (click)="sendOTP()"
+              [disabled]="loading()"
+              class="w-full bg-gradient-to-r from-primary-container to-[#e05d00] text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+              @if (loading()) {
+                <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Đang gửi...</span>
+              } @else {
+                <span class="material-symbols-outlined">send</span>
+                <span>Gửi mã OTP</span>
+              }
+            </button>
+
+            <div class="text-center">
+              <a routerLink="/dang-nhap" class="text-primary-container hover:underline text-sm font-medium">
+                ← Quay lại đăng nhập
+              </a>
+            </div>
+          </div>
+        }
+
+        <!-- Bước 2: Nhập OTP -->
+        @if (step() === 2) {
+          <div class="space-y-6">
+            <div>
+              <p class="text-center text-on-surface-variant mb-2">
+                Mã OTP đã được gửi đến
+              </p>
+              <p class="text-center font-bold text-primary-container mb-6">{{ email }}</p>
+              
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">pin</span>
+                <input
+                  [(ngModel)]="otp"
+                  type="text"
+                  maxlength="6"
+                  placeholder="Nhập mã OTP (6 số)"
+                  class="w-full pl-12 pr-4 py-3 border-2 border-surface-container-high rounded-xl focus:border-primary-container focus:outline-none transition-all text-center text-2xl font-bold tracking-widest"
+                  [disabled]="loading()"
+                  (keyup.enter)="verifyOTP()">
+              </div>
+
+              <div class="mt-4 text-center">
+                @if (canResend()) {
+                  <button
+                    (click)="resendOTP()"
+                    class="text-primary-container hover:underline text-sm font-medium">
+                    Gửi lại mã OTP
+                  </button>
+                } @else {
+                  <p class="text-sm text-on-surface-variant">
+                    Gửi lại sau <span class="font-bold text-primary-container">{{ countdown() }}s</span>
+                  </p>
+                }
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <button
+                (click)="goBack()"
+                class="flex-1 bg-surface-container-low text-on-surface py-3 rounded-xl font-bold hover:bg-surface-container-high transition-all">
+                Quay lại
+              </button>
+              <button
+                (click)="verifyOTP()"
+                [disabled]="loading()"
+                class="flex-1 bg-gradient-to-r from-primary-container to-[#e05d00] text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                @if (loading()) {
+                  <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                } @else {
+                  <span>Xác thực</span>
+                }
+              </button>
+            </div>
+          </div>
+        }
+
+        <!-- Bước 3: Đặt mật khẩu mới -->
+        @if (step() === 3) {
+          <div class="space-y-6">
+            <p class="text-center text-on-surface-variant mb-6">
+              Tạo mật khẩu mới cho tài khoản của bạn
+            </p>
+
+            <div class="space-y-4">
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
+                <input
+                  [(ngModel)]="mat_khau_moi"
+                  type="password"
+                  placeholder="Mật khẩu mới"
+                  class="w-full pl-12 pr-4 py-3 border-2 border-surface-container-high rounded-xl focus:border-primary-container focus:outline-none transition-all"
+                  [disabled]="loading()">
+              </div>
+
+              <div class="relative">
+                <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">lock</span>
+                <input
+                  [(ngModel)]="xac_nhan_mat_khau"
+                  type="password"
+                  placeholder="Xác nhận mật khẩu"
+                  class="w-full pl-12 pr-4 py-3 border-2 border-surface-container-high rounded-xl focus:border-primary-container focus:outline-none transition-all"
+                  [disabled]="loading()"
+                  (keyup.enter)="resetPassword()">
+              </div>
+
+              <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+                <p class="text-sm text-blue-800">
+                  <strong>💡 Lưu ý:</strong> Mật khẩu phải có ít nhất 6 ký tự
+                </p>
+              </div>
+            </div>
+
+            <div class="flex gap-3">
+              <button
+                (click)="goBack()"
+                class="flex-1 bg-surface-container-low text-on-surface py-3 rounded-xl font-bold hover:bg-surface-container-high transition-all">
+                Quay lại
+              </button>
+              <button
+                (click)="resetPassword()"
+                [disabled]="loading()"
+                class="flex-1 bg-gradient-to-r from-primary-container to-[#e05d00] text-white py-3 rounded-xl font-bold hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2">
+                @if (loading()) {
+                  <div class="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  <span>Đang xử lý...</span>
+                } @else {
+                  <span class="material-symbols-outlined">check_circle</span>
+                  <span>Đặt lại mật khẩu</span>
+                }
+              </button>
+            </div>
+          </div>
+        }
+
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center mt-6">
+      <p class="text-sm text-gray-600">
+        Bạn đã nhớ mật khẩu? 
+        <a routerLink="/dang-nhap" class="text-primary-container font-bold hover:underline">Đăng nhập ngay</a>
+      </p>
+    </div>
+
+  </div>
+
+</main>

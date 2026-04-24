@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản trị Laptop - TechCore</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+   
+</head>
+<body class="bg-background text-on-background">
+<div class="flex h-screen bg-gray-100">
+  
+  <!-- Sidebar -->
+  <aside class="w-64 bg-[#0f172a] text-slate-300 transition-all duration-300 flex flex-col h-screen shadow-2xl border-r border-white/5">
+    
+    <div class="h-20 flex items-center px-6 gap-3 border-b border-white/5">
+        <div class="w-10 h-10 bg-[#0058be] rounded-xl flex items-center justify-center shadow-lg shadow-[#0058be]/20">
+            <span class="material-symbols-outlined text-white">developer_board</span>
+        </div>
+        <div class="flex flex-col">
+            <span class="text-white font-black text-lg tracking-tight leading-none">Tech<span class="text-[#0058be]">Core</span></span>
+            <span class="text-[10px] font-bold text-slate-500 uppercase tracking-[0.2em] mt-1">Management</span>
+        </div>
+    </div>
+
+    <nav class="flex-1 px-4 py-6 space-y-8 overflow-y-auto custom-scrollbar">
+        
+        <div>
+            <p class="px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Hệ thống</p>
+            <div class="space-y-1">
+                <a routerLink="/admin/dashboard" routerLinkActive="text-white bg-white/5 border border-white/5" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all">
+                    <span class="material-symbols-outlined text-[20px] text-[#0058be]">grid_view</span>
+                    <span class="text-sm font-bold">Dashboard</span>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <p class="px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Cửa hàng</p>
+            <div class="space-y-1">
+                <a routerLink="/admin/san-pham" routerLinkActive="bg-white/5 text-white border border-white/5" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all group">
+                    <span class="material-symbols-outlined text-[20px] group-hover:text-[#0058be]">inventory_2</span>
+                    <span class="text-sm font-semibold">Sản phẩm</span>
+                </a>
+                <a href="/admin/category" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all group">
+                    <span class="material-symbols-outlined text-[20px] group-hover:text-[#0058be]">category</span>
+                    <span class="text-sm font-semibold">Danh mục hãng</span>
+                </a>
+                <a routerLink="/admin/don-hang" routerLinkActive="bg-white/5 text-white border border-white/5" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all group">
+                    <span class="material-symbols-outlined text-[20px] group-hover:text-[#0058be]">shopping_cart</span>
+                    <span class="text-sm font-semibold">Đơn hàng</span>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <p class="px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Nội dung</p>
+            <div class="space-y-1">
+                <a routerLink="/admin/tin-tuc" routerLinkActive="bg-white/5 text-white border border-white/5" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all group">
+                    <span class="material-symbols-outlined text-[20px] group-hover:text-[#0058be]">article</span>
+                    <span class="text-sm font-semibold">Tin tức</span>
+                </a>
+            </div>
+        </div>
+
+        <div>
+            <p class="px-4 text-[10px] font-black text-slate-500 uppercase tracking-[0.2em] mb-4">Người dùng</p>
+            <div class="space-y-1">
+                <a routerLink="/admin/nguoi-dung" routerLinkActive="bg-white/5 text-white border border-white/5" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-white/5 hover:text-white transition-all group">
+                    <span class="material-symbols-outlined text-[20px] group-hover:text-[#0058be]">group</span>
+                    <span class="text-sm font-semibold">Quản lý người dùng</span>
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="p-4 bg-black/20 m-4 rounded-2xl border border-white/5">
+        <div class="flex items-center gap-3">
+            <div class="relative">
+                <img [src]="'https://ui-avatars.com/api/?name=' + (currentAdmin()?.ho_ten || 'Admin') + '&background=0058be&color=fff'" class="w-10 h-10 rounded-xl" alt="avatar">
+                <span class="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-[#0f172a] rounded-full"></span>
+            </div>
+            <div class="flex-1 min-w-0">
+                <p class="text-xs font-black text-white truncate">{{ currentAdmin()?.ho_ten || 'Admin' }}</p>
+                <p class="text-[10px] text-slate-500 font-bold truncate">Quản trị viên</p>
+            </div>
+            <button (click)="logout()" class="text-slate-500 hover:text-red-400 transition-colors" title="Đăng xuất">
+                <span class="material-symbols-outlined text-sm">logout</span>
+            </button>
+        </div>
+    </div>
+</aside>
+ 
+  <!-- Main Content -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+ 
+    <!-- Top Bar -->
+    <header class="bg-white shadow-sm px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <h2 class="text-2xl font-black text-primary-container">Quản trị hệ thống</h2>
+      </div>
+      
+      <div class="flex items-center gap-4">
+        <button class="p-2 hover:bg-gray-100 rounded-lg transition-colors relative">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+        </button>
+        
+        <a routerLink="/" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors flex items-center gap-2">
+          <span class="material-symbols-outlined text-base">storefront</span>
+          <span class="text-sm font-medium">Xem trang chủ</span>
+        </a>
+        
+        <button (click)="logout()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors flex items-center gap-2">
+          <span class="material-symbols-outlined text-base">logout</span>
+          <span class="text-sm font-medium">Đăng xuất</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Content Area -->
+    <main class="flex-1 overflow-auto p-6">
+      <router-outlet />
+    </main>
+  </div>
+
+</div>
+</body>
+</html>

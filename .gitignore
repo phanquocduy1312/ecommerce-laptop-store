@@ -1,0 +1,49 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Build outputs
+dist/
+build/
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Uploads
+server-node/uploads/*
+!server-node/uploads/.gitkeep
+
+# Angular
+asm/.angular/
+asm/dist/
+asm/.vscode/
+
+# Zip files
+*.zip
+
+# Database
+*.sql
+*.db
+*.sqlite
+
+# Temporary files
+*.tmp
+*.temp

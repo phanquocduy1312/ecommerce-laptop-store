@@ -1,0 +1,319 @@
+<main class="mt-20">
+  
+  <!-- Hero Section -->
+  <section class="relative bg-gradient-to-br from-[#001E40] via-[#003875] to-[#0058be] text-white py-24 overflow-hidden">
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute top-0 left-1/4 w-96 h-96 bg-white rounded-full blur-3xl animate-float"></div>
+      <div class="absolute bottom-0 right-1/4 w-96 h-96 bg-white rounded-full blur-3xl animate-float" style="animation-delay: 1s;"></div>
+    </div>
+    
+    <div class="max-w-[1440px] mx-auto px-8 relative z-10">
+      <div class="text-center max-w-3xl mx-auto">
+        <div class="inline-block mb-6 animate-fade-in-up">
+          <span class="material-symbols-outlined text-6xl">support_agent</span>
+        </div>
+        <h1 class="text-6xl font-black font-headline mb-6 tracking-tight animate-fade-in-up stagger-1">
+          Liên hệ với chúng tôi
+        </h1>
+        <p class="text-xl text-white/90 leading-relaxed animate-fade-in-up stagger-2">
+          Đội ngũ chuyên gia của chúng tôi luôn sẵn sàng hỗ trợ bạn 24/7
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Info Cards -->
+  <section class="py-16 bg-white relative -mt-16">
+    <div class="max-w-[1440px] mx-auto px-8">
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        @for (info of contactInfo(); track $index) {
+          <div class="contact-card bg-white rounded-2xl p-8 shadow-lg border border-gray-100 text-center animate-fade-in-up" 
+               [class]="'stagger-' + ($index + 1)">
+            <div class="w-16 h-16 bg-gradient-to-br from-[#0058be] to-[#003875] rounded-2xl flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+              <span class="material-symbols-outlined text-white text-3xl">{{ info.icon }}</span>
+            </div>
+            <h3 class="text-lg font-bold text-[#001E40] mb-2">{{ info.title }}</h3>
+            @if (info.link) {
+              <a [href]="info.link" class="text-[#0058be] font-semibold hover:text-[#003875] transition-colors">
+                {{ info.content }}
+              </a>
+            } @else {
+              <p class="text-gray-600 font-medium">{{ info.content }}</p>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content: Form + Map -->
+  <section class="py-20 bg-gradient-to-b from-white to-gray-50">
+    <div class="max-w-[1440px] mx-auto px-8">
+      <div class="grid lg:grid-cols-2 gap-12">
+        
+        <!-- Contact Form -->
+        <div class="animate-fade-in-up">
+          <div class="bg-white rounded-3xl shadow-xl p-10 border border-gray-100">
+            <div class="mb-8">
+              <h2 class="text-4xl font-black font-headline text-[#001E40] mb-4">
+                Gửi tin nhắn cho chúng tôi
+              </h2>
+              <p class="text-gray-600">
+                Điền thông tin bên dưới và chúng tôi sẽ phản hồi trong vòng 24 giờ
+              </p>
+            </div>
+
+            @if (submitted()) {
+              <div class="bg-green-50 border-2 border-green-200 rounded-2xl p-6 mb-6 animate-fade-in">
+                <div class="flex items-start gap-4">
+                  <div class="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0">
+                    <span class="material-symbols-outlined text-white text-2xl">check_circle</span>
+                  </div>
+                  <div>
+                    <h3 class="text-lg font-bold text-green-800 mb-1">Gửi thành công!</h3>
+                    <p class="text-green-700">Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm nhất có thể.</p>
+                  </div>
+                </div>
+              </div>
+            }
+
+            <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" class="space-y-6">
+              
+              <!-- Họ tên -->
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">
+                  Họ và tên <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <span class="material-symbols-outlined text-gray-400 text-[20px]">person</span>
+                  </div>
+                  <input 
+                    type="text" 
+                    formControlName="ho_ten"
+                    placeholder="Nguyễn Văn A"
+                    class="input-focus w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#0058be] focus:ring-4 focus:ring-[#0058be]/10 outline-none transition-all text-sm font-medium"
+                    [class.border-red-500]="isFieldInvalid('ho_ten')" />
+                </div>
+                @if (isFieldInvalid('ho_ten')) {
+                  <p class="text-xs font-bold text-red-500 mt-2 animate-fade-in">
+                    {{ getErrorMessage('ho_ten') }}
+                  </p>
+                }
+              </div>
+
+              <!-- Email & Phone -->
+              <div class="grid md:grid-cols-2 gap-6">
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2">
+                    Email <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <span class="material-symbols-outlined text-gray-400 text-[20px]">mail</span>
+                    </div>
+                    <input 
+                      type="email" 
+                      formControlName="email"
+                      placeholder="email@example.com"
+                      class="input-focus w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#0058be] focus:ring-4 focus:ring-[#0058be]/10 outline-none transition-all text-sm font-medium"
+                      [class.border-red-500]="isFieldInvalid('email')" />
+                  </div>
+                  @if (isFieldInvalid('email')) {
+                    <p class="text-xs font-bold text-red-500 mt-2 animate-fade-in">
+                      {{ getErrorMessage('email') }}
+                    </p>
+                  }
+                </div>
+
+                <div>
+                  <label class="block text-sm font-bold text-gray-700 mb-2">
+                    Số điện thoại <span class="text-red-500">*</span>
+                  </label>
+                  <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                      <span class="material-symbols-outlined text-gray-400 text-[20px]">call</span>
+                    </div>
+                    <input 
+                      type="tel" 
+                      formControlName="so_dien_thoai"
+                      placeholder="0912345678"
+                      class="input-focus w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#0058be] focus:ring-4 focus:ring-[#0058be]/10 outline-all text-sm font-medium"
+                      [class.border-red-500]="isFieldInvalid('so_dien_thoai')" />
+                  </div>
+                  @if (isFieldInvalid('so_dien_thoai')) {
+                    <p class="text-xs font-bold text-red-500 mt-2 animate-fade-in">
+                      {{ getErrorMessage('so_dien_thoai') }}
+                    </p>
+                  }
+                </div>
+              </div>
+
+              <!-- Chủ đề -->
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">
+                  Chủ đề <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                  <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <span class="material-symbols-outlined text-gray-400 text-[20px]">subject</span>
+                  </div>
+                  <select 
+                    formControlName="chu_de"
+                    class="input-focus w-full pl-12 pr-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#0058be] focus:ring-4 focus:ring-[#0058be]/10 outline-none transition-all text-sm font-medium appearance-none bg-white"
+                    [class.border-red-500]="isFieldInvalid('chu_de')">
+                    <option value="">Chọn chủ đề</option>
+                    <option value="tu-van">Tư vấn sản phẩm</option>
+                    <option value="bao-hanh">Bảo hành & Sửa chữa</option>
+                    <option value="don-hang">Đơn hàng & Giao hàng</option>
+                    <option value="khieu-nai">Khiếu nại</option>
+                    <option value="khac">Khác</option>
+                  </select>
+                  <div class="absolute inset-y-0 right-0 pr-4 flex items-center pointer-events-none">
+                    <span class="material-symbols-outlined text-gray-400 text-[20px]">expand_more</span>
+                  </div>
+                </div>
+                @if (isFieldInvalid('chu_de')) {
+                  <p class="text-xs font-bold text-red-500 mt-2 animate-fade-in">
+                    {{ getErrorMessage('chu_de') }}
+                  </p>
+                }
+              </div>
+
+              <!-- Nội dung -->
+              <div>
+                <label class="block text-sm font-bold text-gray-700 mb-2">
+                  Nội dung <span class="text-red-500">*</span>
+                </label>
+                <textarea 
+                  formControlName="noi_dung"
+                  rows="5"
+                  placeholder="Nhập nội dung tin nhắn của bạn..."
+                  class="input-focus w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 focus:border-[#0058be] focus:ring-4 focus:ring-[#0058be]/10 outline-none transition-all text-sm font-medium resize-none"
+                  [class.border-red-500]="isFieldInvalid('noi_dung')"></textarea>
+                @if (isFieldInvalid('noi_dung')) {
+                  <p class="text-xs font-bold text-red-500 mt-2 animate-fade-in">
+                    {{ getErrorMessage('noi_dung') }}
+                  </p>
+                }
+              </div>
+
+              <!-- Submit Button -->
+              <button 
+                type="submit"
+                [disabled]="loading()"
+                class="w-full bg-gradient-to-r from-[#0058be] to-[#003875] hover:from-[#003875] hover:to-[#001E40] text-white font-black py-4 px-6 rounded-xl transition-all flex items-center justify-center gap-3 disabled:opacity-70 disabled:cursor-not-allowed shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]">
+                @if (loading()) {
+                  <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                  <span>Đang gửi...</span>
+                } @else {
+                  <span>Gửi tin nhắn</span>
+                  <span class="material-symbols-outlined">send</span>
+                }
+              </button>
+
+            </form>
+          </div>
+        </div>
+
+        <!-- Map & Additional Info -->
+        <div class="space-y-8 animate-fade-in-up stagger-2">
+          
+          <!-- Map -->
+          <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
+            <div class="aspect-[4/3] bg-gray-100">
+              <iframe 
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.4967814570754!2d106.69522831533417!3d10.772461262309804!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f4b3330bcc9%3A0xb8b6e3e6c5f6e6e6!2zTmd1eeG7hW4gSHXhu4csIFF1YW4gMSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5o!5e0!3m2!1svi!2s!4v1234567890123!5m2!1svi!2s"
+                width="100%" 
+                height="100%" 
+                style="border:0;" 
+                allowfullscreen="" 
+                loading="lazy" 
+                referrerpolicy="no-referrer-when-downgrade"
+                class="w-full h-full">
+              </iframe>
+            </div>
+          </div>
+
+          <!-- Social Media -->
+          <div class="bg-gradient-to-br from-[#001E40] to-[#003875] rounded-3xl p-8 text-white shadow-xl">
+            <h3 class="text-2xl font-black mb-6">Kết nối với chúng tôi</h3>
+            <div class="grid grid-cols-2 gap-4">
+              <a href="#" class="flex items-center gap-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl p-4 transition-all group">
+                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-white">facebook</span>
+                </div>
+                <span class="font-bold">Facebook</span>
+              </a>
+              <a href="#" class="flex items-center gap-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl p-4 transition-all group">
+                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-white">chat</span>
+                </div>
+                <span class="font-bold">Zalo</span>
+              </a>
+              <a href="#" class="flex items-center gap-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl p-4 transition-all group">
+                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-white">photo_camera</span>
+                </div>
+                <span class="font-bold">Instagram</span>
+              </a>
+              <a href="#" class="flex items-center gap-3 bg-white/10 backdrop-blur-sm hover:bg-white/20 rounded-xl p-4 transition-all group">
+                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <span class="material-symbols-outlined text-white">play_circle</span>
+                </div>
+                <span class="font-bold">YouTube</span>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-[1440px] mx-auto px-8">
+      <div class="text-center max-w-3xl mx-auto mb-16">
+        <span class="text-[#0058be] font-bold text-sm uppercase tracking-wider mb-4 block">Câu hỏi thường gặp</span>
+        <h2 class="text-5xl font-black font-headline text-[#001E40] mb-6">
+          FAQ
+        </h2>
+        <p class="text-gray-600 text-lg">
+          Tìm câu trả lời nhanh chóng cho các thắc mắc phổ biến
+        </p>
+      </div>
+
+      <div class="max-w-4xl mx-auto space-y-4">
+        @for (faq of faqs(); track $index) {
+          <div class="faq-item bg-white rounded-2xl border-2 border-gray-100 overflow-hidden hover:border-[#0058be]/30 transition-all">
+            <button 
+              (click)="toggleFAQ($index)"
+              class="w-full flex items-center justify-between p-6 text-left hover:bg-gray-50 transition-colors">
+              <div class="flex items-start gap-4 flex-1">
+                <div class="w-10 h-10 bg-gradient-to-br from-[#0058be] to-[#003875] rounded-lg flex items-center justify-center flex-shrink-0">
+                  <span class="material-symbols-outlined text-white text-[20px]">help</span>
+                </div>
+                <h3 class="text-lg font-bold text-[#001E40] flex-1">{{ faq.question }}</h3>
+              </div>
+              <span class="material-symbols-outlined text-[#0058be] transition-transform" 
+                    [class.rotate-180]="faq.isOpen">
+                expand_more
+              </span>
+            </button>
+            
+            @if (faq.isOpen) {
+              <div class="faq-answer px-6 pb-6 animate-slide-down">
+                <div class="pl-14 text-gray-600 leading-relaxed">
+                  {{ faq.answer }}
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  </section>
+
+</main>
+""

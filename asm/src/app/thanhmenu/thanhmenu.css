@@ -1,0 +1,20 @@
+/* Ẩn scrollbar */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Smooth scroll */
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+/* Prevent text selection khi scroll */
+.scrollbar-hide {
+  -webkit-user-select: none;
+  user-select: none;
+}
