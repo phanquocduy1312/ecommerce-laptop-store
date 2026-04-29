@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-production-api.com/api'  // URL production
+  apiUrl: 'https://laptop-store-backend.vercel.app/api'  // Update sau khi deploy backend
 };
