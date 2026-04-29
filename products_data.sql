@@ -1,0 +1,12 @@
+-- Sample data for san_pham (products) - 200 products
+INSERT INTO san_pham (id, ten_sp, slug, gia, gia_km, id_loai, ngay, hinh, hot, luot_xem, an_hien, tinh_chat, mo_ta, created_at, updated_at, deleted_at) VALUES
+(1, 'MSI MacBook Pro 1155G7', 'msi-macbook-pro-1155g7-1', 5639577, 3269887, 4, '2022-05-20', 'https://cdn.tgdd.vn/Products/Images/44/265523/itel-able-1s-n4020-71006300027-1-1.jpg', 0, 569, 0, 1, NULL, NULL, NULL, NULL),
+(2, 'Masstel Gaming GF63 Thin 15 X1502ZA i5', 'masstel-gaming-gf63-thin-15-x1502za-i5-2', 17432980, 14915444, 9, '2024-01-18', 'https://cdn.tgdd.vn/Products/Images/44/284258/asus-zenbook-14-oled-ux3402za-i5-km218w-a-1.jpg', 1, 299, 1, 0, NULL, NULL, NULL, NULL),
+(3, 'Dell Spirit 1155G7', 'dell-spirit-1155g7-3', 25473146, 21065896, 6, '2023-09-25', 'https://cdn.tgdd.vn/Products/Images/44/302486/hp-victus-15-fa0111tx-i5-7c0r4pa-glr-1.jpg', 0, 436, 0, 2, NULL, NULL, NULL, NULL),
+(4, 'Apple E140 15IHU6', 'apple-e140-15ihu6-4', 22747195, 19900319, 7, '2023-09-28', 'https://cdn.tgdd.vn/Products/Images/44/302226/lenovo-ideapad-gaming-3-15ihu6-i5-82k101f3vn-1.jpg', 0, 125, 0, 0, NULL, NULL, NULL, NULL),
+(5, 'CHUWI MacBook Pro X N5100', 'chuwi-macbook-pro-x-n5100-5', 17892057, 14494917, 11, '2024-10-22', 'https://cdn.tgdd.vn/Products/Images/44/300000/itel-spirit-2-i5-71006300202-3.jpg', 1, 483, 1, 2, NULL, NULL, NULL, NULL),
+(6, 'Asus E140 N4120', 'asus-e140-n4120-6', 18177880, 16976404, 1, '2022-06-12', 'https://cdn.tgdd.vn/Products/Images/44/270031/asus-rog-strix-gaming-g513ih-r7-hn015w-2-1.jpg', 0, 249, 1, 0, NULL, NULL, NULL, NULL),
+(7, 'Asus gram 2023 N4020', 'asus-gram-2023-n4020-7', 18650722, 16136147, 1, '2022-11-15', 'https://cdn.tgdd.vn/Products/Images/44/281483/asus-vivobook-15-x1502za-i5-ej120w-1-1.jpg', 0, 302, 1, 0, NULL, NULL, NULL, NULL),
+(8, 'Dell LarkBook 5511 11400H', 'dell-larkbook-5511-11400h-8', 19519423, 17914055, 6, '2024-04-20', 'https://cdn.tgdd.vn/Products/Images/44/264354/dell-gaming-g15-5511-i5-70266676-1-1.jpg', 1, 333, 1, 0, NULL, NULL, NULL, NULL),
+(9, 'Acer Gaming ROG Strix X N5100', 'acer-gaming-rog-strix-x-n5100-9', 10383273, 6884583, 2, '2023-12-23', 'https://cdn.tgdd.vn/Products/Images/44/264354/dell-gaming-g15-5511-i5-70266676-1-1.jpg', 0, 949, 1, 2, NULL, NULL, NULL, NULL),
+(10, 'itel Ideapad Gaming 3 1255U', 'itel-ideapad-gaming-3-1255u-10', 7850104, 3904895, 12, '2024-03-27', 'https://cdn.tgdd.vn/Products/Images/44/302950/masstel-e116-n4020-glr-1.jpg', 1, 792, 1, 2, NULL, NULL, NULL, NULL);

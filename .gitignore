@@ -40,7 +40,6 @@ asm/.vscode/
 *.zip
 
 # Database
-*.sql
 *.db
 *.sqlite
 

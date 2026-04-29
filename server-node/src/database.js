@@ -4,38 +4,34 @@ import { Sequelize, DataTypes } from 'sequelize';
 // Render sẽ tự động cung cấp DATABASE_URL
 let sequelize;
 
-if (process.env.DATABASE_URL) {
-  // Dùng DATABASE_URL từ Render
-  sequelize = new Sequelize(process.env.DATABASE_URL, {
-    dialect: 'mysql',
-    logging: false,
-    pool: {
-      max: 5,
-      min: 0,
-      acquire: 30000,
-      idle: 10000
+// TiDB Cloud connection (hardcoded for deployment)
+const TIDB_CONFIG = {
+  host: 'gateway01.ap-southeast-1.prod.alicloud.tidbcloud.com',
+  port: 4000,
+  username: '3QYyvYyuzFtwb5t.root',
+  password: 'p2U91ppblJPwqGLZ',
+  database: 'laptop'
+};
+
+// Use TiDB Cloud connection
+sequelize = new Sequelize(TIDB_CONFIG.database, TIDB_CONFIG.username, TIDB_CONFIG.password, {
+  host: TIDB_CONFIG.host,
+  port: TIDB_CONFIG.port,
+  dialect: 'mysql',
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+      rejectUnauthorized: false
     }
-  });
-} else {
-  // Local development
-  sequelize = new Sequelize(
-    'laptop_node',
-    'root',
-    '',
-    {
-      host: '127.0.0.1',
-      port: 3306,
-      dialect: 'mysql',
-      logging: false,
-      pool: {
-        max: 5,
-        min: 0,
-        acquire: 30000,
-        idle: 10000
-      }
-    }
-  );
-}
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 30000,
+    idle: 10000
+  }
+});
 
 export { sequelize };
 
