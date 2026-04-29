@@ -1459,3 +1459,6 @@ app.listen(port, () => {
 }).on('error', function (err) {
     console.log(`Loi xay ra khi chay ung dung ${err}`);
 });
+
+// Export app cho Vercel
+export { app };
