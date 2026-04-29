@@ -1,22 +1,15 @@
 {
   "version": 2,
-  "builds": [
+  "buildCommand": "npm install",
+  "outputDirectory": ".",
+  "rewrites": [
     {
-      "src": "package.json",
-      "use": "@vercel/node"
-    }
-  ],
-  "routes": [
-    {
-      "src": "/api/(.*)",
-      "dest": "/src/index.js"
+      "source": "/api/(.*)",
+      "destination": "/src/index.js"
     },
     {
-      "src": "/(.*)",
-      "dest": "/src/index.js"
+      "source": "/(.*)",
+      "destination": "/src/index.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }
