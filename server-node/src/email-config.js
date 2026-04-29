@@ -1,13 +1,11 @@
 import nodemailer from 'nodemailer';
-import dotenv from 'dotenv';
-dotenv.config();
 
-// Cấu hình email transporter
+// Cấu hình email transporter (hardcoded cho dự án sinh viên)
 export const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.EMAIL_USER || 'phanquocduy1312@gmail.com',
-        pass: process.env.EMAIL_PASSWORD || 'mvmu zsov ouds chkk'
+        user: 'phanquocduy1312@gmail.com',
+        pass: 'mvmu zsov ouds chkk'
     }
 });
 

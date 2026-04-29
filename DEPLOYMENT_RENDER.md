@@ -1,40 +1,31 @@
-# Hướng dẫn Deploy lên Render
+# Hướng dẫn Deploy lên Render (Dự án Sinh Viên)
 
 ## Tổng quan
-Project này có 2 phần:
+Project này đã được cấu hình đơn giản hóa cho sinh viên:
 - **Backend (Node.js)**: Thư mục `server-node`
 - **Frontend (Angular)**: Thư mục `asm`
+- **Tất cả cấu hình đã hardcode trực tiếp vào code, không cần environment variables phức tạp**
 
 ## Bước 1: Deploy Backend lên Render
 
 ### 1.1 Chuẩn bị Repository
 - Đảm bảo code đã được push lên GitHub/GitLab
-- File `server-node/render.yaml` đã được tạo (đã có sẵn trong project)
+- File `render.yaml` đã có sẵn ở root directory
 
 ### 1.2 Tạo Web Service trên Render
 1. Đăng nhập vào [Render](https://render.com)
 2. Nhấn **New +** → **Web Service**
 3. Kết nối repository của bạn
-4. Render sẽ tự động phát hiện file `render.yaml` trong thư mục `server-node`
+4. Render sẽ tự động phát hiện file `render.yaml` ở root
 5. Nhấn **Create Web Service**
 
-### 1.3 Cấu hình Environment Variables
-Sau khi tạo service, bạn cần thêm các biến môi trường:
-
-1. Vào **Settings** → **Environment Variables**
-2. Thêm các biến sau:
-
-```
-EMAIL_USER=your-email@gmail.com
-EMAIL_PASSWORD=your-gmail-app-password
-```
-
-**Lưu ý**: Để lấy Gmail App Password:
-- Vào Google Account → Security → 2-Step Verification → App passwords
-- Tạo app password mới và copy vào biến môi trường
-
-### 1.4 Database
+### 1.3 Database
 Render sẽ tự động tạo MySQL database dựa trên cấu hình trong `render.yaml`. Không cần cấu hình thủ công.
+
+**Lưu ý**: Tất cả cấu hình đã được hardcode:
+- Email: đã cấu hình sẵn trong `server-node/src/email-config.js`
+- JWT Secret: đã hardcode trong `server-node/src/index.js`
+- Database: tự động dùng `DATABASE_URL` từ Render
 
 ## Bước 2: Deploy Frontend lên Render
 
@@ -70,7 +61,7 @@ export const environment = {
 };
 ```
 
-## Cấu hình Render Dashboard (như trong ảnh)
+## Cấu hình Render Dashboard (nếu muốn cấu hình thủ công)
 
 Nếu bạn muốn cấu hình thủ công thay vì dùng `render.yaml`:
 
@@ -83,22 +74,12 @@ Nếu bạn muốn cấu hình thủ công thay vì dùng `render.yaml`:
 - **Instance Type**: Free (512 MB RAM, 0.1 CPU)
 
 ### Environment Variables:
-- `NODE_ENV`: `production`
-- `PORT`: `3001`
-- `JWT_SECRET`: (Render sẽ tự động generate)
-- `EMAIL_HOST`: `smtp.gmail.com`
-- `EMAIL_PORT`: `587`
-- `EMAIL_USER`: `your-email@gmail.com`
-- `EMAIL_PASSWORD`: `your-app-password`
+- Chỉ cần 1 biến: `DATABASE_URL` (Render sẽ tự động cung cấp khi bạn tạo database)
+- Không cần cấu hình email, JWT_SECRET - đã hardcode rồi
 
 ### Database:
 - Tạo MySQL database trên Render
-- Render sẽ tự động inject các biến môi trường:
-  - `DB_HOST`
-  - `DB_PORT`
-  - `DB_NAME`
-  - `DB_USER`
-  - `DB_PASSWORD`
+- Render sẽ tự động inject `DATABASE_URL` vào web service
 
 ## Kiểm tra Deployment
 
@@ -131,11 +112,10 @@ Nếu bạn muốn cấu hình thủ công thay vì dùng `render.yaml`:
 
 ### Lỗi database:
 - Kiểm tra database đã được tạo chưa
-- Kiểm tra environment variables có đúng không
+- Kiểm tra `DATABASE_URL` đã được inject chưa
 
 ### Lỗi email:
-- Đảm bảo Gmail App Password đúng
-- Kiểm tra 2-Step Verification đã bật chưa
+- Email đã hardcode sẵn, kiểm tra trong `server-node/src/email-config.js`
 
 ## Next Steps
 

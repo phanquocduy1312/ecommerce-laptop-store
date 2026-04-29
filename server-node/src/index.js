@@ -7,14 +7,16 @@ import { sendOTP, verifyOTP, resetPassword } from './forgot-password-api.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import fs from 'fs'
-import dotenv from 'dotenv'
 import jwt from 'node-jsonwebtoken'
-dotenv.config()
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3001;
+
+// Hardcoded JWT secret cho dự án sinh viên
+const JWT_SECRET = 'laptop-store-secret-key-2026';
 
 app.use(express.json()); // cho phép đọc dữ liệu dạng json
 app.use(cors()); // cho phép Angular và Vite request đến backend
@@ -46,7 +48,7 @@ app.post('/api/dangnhapadmin', async (req, res) => {
     // tạo token
     const payload = { id: user.id, email: user.email }
     const maxAge = '1h'
-    const bearToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: maxAge })
+    const bearToken = jwt.sign(payload, JWT_SECRET, { expiresIn: maxAge })
     res.status(200).json({
         token: bearToken, expiresIn: maxAge,
         info: { id: user.id, ho_ten: user.ho_ten, email: user.email, vai_tro: user.vai_tro }

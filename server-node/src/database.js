@@ -1,24 +1,43 @@
 import { Sequelize, DataTypes } from 'sequelize';
-import dotenv from 'dotenv';
-dotenv.config();
 
-export const sequelize = new Sequelize(
-  process.env.DB_NAME || 'laptop_node',
-  process.env.DB_USER || 'root',
-  process.env.DB_PASSWORD || '',
-  {
-    host: process.env.DB_HOST || '127.0.0.1',
-    port: process.env.DB_PORT || 3306,
+// Cấu hình database (hardcoded cho dự án sinh viên)
+// Render sẽ tự động cung cấp DATABASE_URL
+let sequelize;
+
+if (process.env.DATABASE_URL) {
+  // Dùng DATABASE_URL từ Render
+  sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialect: 'mysql',
-    logging: process.env.NODE_ENV === 'production' ? false : console.log,
+    logging: false,
     pool: {
       max: 5,
       min: 0,
       acquire: 30000,
       idle: 10000
     }
-  }
-);
+  });
+} else {
+  // Local development
+  sequelize = new Sequelize(
+    'laptop_node',
+    'root',
+    '',
+    {
+      host: '127.0.0.1',
+      port: 3306,
+      dialect: 'mysql',
+      logging: false,
+      pool: {
+        max: 5,
+        min: 0,
+        acquire: 30000,
+        idle: 10000
+      }
+    }
+  );
+}
+
+export { sequelize };
 
 export const LoaiModel = sequelize.define('loai',
   {
